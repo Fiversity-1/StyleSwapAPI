@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    environment:
+      PORT: 8080
+    ports:
+      - 8080:8080
