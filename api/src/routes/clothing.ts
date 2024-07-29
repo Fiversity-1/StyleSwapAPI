@@ -52,6 +52,4 @@ export async function postClothing(req: Request<UserRouteParams, any, ClothingBo
     const savedItem = await clothingRepository.save(newItem)
 
     res.status(201).json({ itemId: savedItem.clothingId });
-}
-
-    
+}   
