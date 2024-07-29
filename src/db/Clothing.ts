@@ -3,9 +3,13 @@ import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 't
 import { User } from './User';
 
 import {
+    Gender,
     Size,
-    Gender
+    Condition,
+    Type,
+    Style
 } from '../enums'
+
 
 @Entity()
 export class Clothing {
@@ -25,24 +29,46 @@ export class Clothing {
     @Column({ nullable: true })
     picture: string;
 
+    @Column({ nullable: false })
+    bio: string;
+
     // Tags and allat
 
     @Column({ nullable: false })
     colour:  string; // Could be an enum or something later
 
-    @Column({ 
-        type: 'enum',
-        enum: Size,
-        default: Size.M
-    })
-    size: Size
+    @Column({ nullable: false })
+    sizee: string
 
     @Column({ 
         type: 'enum',
         enum: Gender,
         default: Gender.UNISEX
     })
-    size: Gender
+    gender: Gender
+
+    @Column({ 
+        type: 'enum',
+        enum: Condition,
+        nullable: false
+    })
+    condition: Condition
+
+    @Column({ 
+        type: 'enum',
+        enum: Style,
+        nullable: true
+    })
+    style: Style
+
+    @Column({ 
+        type: 'enum',
+        enum: Type,
+        nullable: false
+    })
+    typee: Type
+
+
 }
 
 

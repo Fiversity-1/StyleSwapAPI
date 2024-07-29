@@ -1,4 +1,6 @@
-import { Gender } from './enums';
+import { Gender, Size, Condition, Type, Style } from './enums';
+
+export type SizeWithNumber = Size | number;
 
 export type UserRouteParams = {
     userId: string
@@ -6,9 +8,11 @@ export type UserRouteParams = {
 
 export type ClothingBodyParams = {
     colour: string,
-    size: string,
-    condition: string,
+    size: SizeWithNumber,
+    condition: Condition,
     gender: Gender,
     brand: string,
-    style: string
+    style: Style,
+    type: Type,
+    bio: string
 };

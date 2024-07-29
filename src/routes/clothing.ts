@@ -13,13 +13,18 @@ export async function postClothing(req: Request<UserRouteParams, any, ClothingBo
         condition,
         gender,
         brand,
-        style
+        style,
+        bio,
+        type
     } = req.body;
-
 
     if (!userId) {
         res.status(400).json('Missing userId');
         return;
+    }
+    
+    if (!colour || !size || !condition || !style || !bio) {
+        res.status(400).json('Missing information');
     }
 
     const userRepository = getConnection().getRepository(UserDb);
@@ -34,12 +39,14 @@ export async function postClothing(req: Request<UserRouteParams, any, ClothingBo
     
     const newItem = new ClothingDb();
 
-    newItem.size = size;
+    newItem.sizee = size;
     newItem.gender = gender;
     newItem.colour = colour;
     newItem.condition = condition;
     newItem.brand = brand;
     newItem.style = style;
+    newItem.typee = type;
+    newItem.bio = bio;
     newItem.userId = userId;
 
     const savedItem = await clothingRepository.save(newItem)
