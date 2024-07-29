@@ -23,7 +23,7 @@ export async function postClothing(req: Request<UserRouteParams, any, ClothingBo
         return;
     }
     
-    if (!colour || !size || !condition || !style || !bio) {
+    if (!colour || !size || !condition || !type || !bio) {
         res.status(400).json('Missing information');
     }
 
