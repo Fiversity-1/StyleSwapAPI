@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+
+import { User } from './User';
 
 import {
     Size,
@@ -7,8 +9,18 @@ import {
 
 @Entity()
 export class Clothing {
-    @PrimaryColumn()
-    clothingId: string;
+    @PrimaryGeneratedColumn()
+    clothingId: number;
+
+    @ManyToOne(() => User, { nullable: false })
+    @JoinColumn({
+        name: 'userId',
+        referenceColumnName: 'userId',
+    })
+    user: User;
+
+    @Column()
+    userId: User['userId'];
 
     @Column({ nullable: true })
     picture: string;
