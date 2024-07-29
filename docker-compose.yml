@@ -4,7 +4,7 @@ services:
   backend:
     build:
       dockerfile: Dockerfile
-      context: .
+      context: ./api
     environment:
       PORT: 8080
       DB_TYPE: "postgres"
