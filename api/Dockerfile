@@ -10,4 +10,6 @@ RUN bun install --frozen-lock-file
 
 COPY ./src ./src
 
+COPY ./.env .
+
 CMD [ "bun", "./src/index.ts"]

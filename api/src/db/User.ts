@@ -5,13 +5,22 @@ export class User {
     @PrimaryColumn()
     userId: string;
 
+    @Column({ nullable: false })
+    location: string;
+
     @Column({ nullable: true })
     picture: string;
 
-    @Column("simple-array")
+    @Column({ 
+        nullable: true,
+        type: "simple-array" 
+    })
     liked: string[];
 
-    @Column("simple-array")
+    @Column({ 
+        nullable: true,
+        type: "simple-array" 
+    })
     matched: string[];
 }
 
