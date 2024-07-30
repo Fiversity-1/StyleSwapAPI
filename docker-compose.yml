@@ -5,6 +5,10 @@ services:
     build:
       dockerfile: Dockerfile
       context: ./api
+    volumes:
+      - app-data:/app/data
+    env_file:
+      - .env
     environment:
       PORT: 8080
       DB_TYPE: "postgres"
@@ -32,3 +36,6 @@ services:
         - 8081:8080
       depends_on:
         - db
+
+volumes:
+  app-data:

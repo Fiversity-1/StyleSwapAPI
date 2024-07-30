@@ -1,7 +1,10 @@
 import crypto from 'crypto';
+import * as dotenv from 'dotenv';
 
-const key = crypto.randomBytes(32); 
-const iv = crypto.randomBytes(16);
+dotenv.config();
+
+const key = Buffer.from(process.env.KEY, 'hex');
+const iv = Buffer.from(process.env.IV, 'hex');
 
 const algo = 'aes-256-cbc';
 
