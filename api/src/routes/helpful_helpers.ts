@@ -10,8 +10,6 @@ const algo = 'aes-256-cbc';
 
 export function encrypt(text: string): string {
     let cipher = crypto.createCipheriv(algo, key, iv);
-    console.log(key);
-    console.log(iv);
     let encrypted = cipher.update(text);
     encrypted = Buffer.concat([encrypted, cipher.final()]);
     return iv.toString('hex') + ':' + encrypted.toString('hex');
