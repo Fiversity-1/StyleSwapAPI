@@ -4,7 +4,8 @@ import { dripCheck } from './health';
 
 import {
     postClothing,
-    getClothing
+    getClothing,
+    getUserClothing
 } from './clothing';
 
 import {
@@ -18,6 +19,9 @@ export const router = Router();
 // Checks connection with the database and server in general
 router.get('/health', dripCheck);
 
+// Gets all the clothes in the database from a specific user
+router.get('/clothes/:userId', getUserClothing);
+
 ///// POST
 
 // Gets all the clothes, needs to be post because of large information
@@ -28,3 +32,4 @@ router.post('/clothes/:userId', postClothing);
 
 // Adds a new user to the database
 router.post('/user/:userId', postUser);
+

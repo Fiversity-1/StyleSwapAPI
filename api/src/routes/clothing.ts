@@ -141,6 +141,9 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
         }),
     );
 
+    // Not the user's own clothes
+    queryBuilder.andWhere('item.userId != :userId', { userId });
+
     // Max amount items returned
     queryBuilder.limit(amount);
 
