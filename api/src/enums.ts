@@ -21,7 +21,7 @@ export enum Size {
 export enum Condition {
     NEW_TAG = 'new_tag',
     NEW = 'new',
-    LIKE_NEW = 'like new',
+    LIKE_NEW = 'like-new',
     GOOD = 'good',
     FAIR = 'fair'
 }

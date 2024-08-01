@@ -1,9 +1,12 @@
 import { Request, Response } from 'express';
+import { NotBrackets } from 'typeorm';
+
 import { UserRouteParams } from '../types';
 
 import { getConnection } from '../db';
 import { Clothing as ClothingDb } from '../db/Clothing';
 import { User as UserDb } from '../db/User';
+import { encrypt, decrypt } from './helpful_helpers';
 
 export async function postClothing(req: Request<UserRouteParams, any, ClothingBodyParams>, res: Response) {
     const { userId } = req.params;
@@ -25,6 +28,7 @@ export async function postClothing(req: Request<UserRouteParams, any, ClothingBo
     
     if (!colour || !size || !condition || !type || !bio) {
         res.status(400).json('Missing information');
+        return;
     }
 
     const userRepository = getConnection().getRepository(UserDb);
@@ -39,17 +43,118 @@ export async function postClothing(req: Request<UserRouteParams, any, ClothingBo
     
     const newItem = new ClothingDb();
 
-    newItem.sizee = size;
+    newItem.size = size;
     newItem.gender = gender;
     newItem.colour = colour;
     newItem.condition = condition;
     newItem.brand = brand;
     newItem.style = style;
-    newItem.typee = type;
+    newItem.type = type;
     newItem.bio = bio;
     newItem.userId = userId;
 
     const savedItem = await clothingRepository.save(newItem)
 
     res.status(201).json({ itemId: savedItem.clothingId });
-}   
+}
+
+/*
+ * getClothing
+ * ===========
+ *
+ *  ~ Function used in {{url}}/api/clothes/search/:userID
+ *
+ *  Should return information so that the front end can display clothes (pretty much just the entire database entry for each item).
+ */
+export async function getClothing(req:Request<UserRouteParams, any, ClothingGetBodyParams>, res: Response) {
+    const { userId } = req.params;
+    let amount = req.query.amount ?? 20;
+
+    const {
+        colour,
+        size,
+        condition,
+        gender,
+        style,
+        type,
+        distance
+    } = req.body;
+
+    // Get the user and make sure they are legit
+    const userRepository = getConnection().getRepository(UserDb);
+    const user = await userRepository.findOne({ where: {userId} });
+    
+    if (!user) {
+        res.status(404).json("User not found");
+        return;
+    }
+
+    // Get the previous liked and disliked items from that user so we can't give dups
+    const liked = user.liked;
+    const disliked = user.liked;
+
+    // Get the location of the user so we can make sure the clothes are close
+    let loc = decrypt(user.location);
+
+    const clothingRepository = getConnection().getRepository(ClothingDb);
+    
+    // Make a dynamic query builder
+    const queryBuilder = clothingRepository.createQueryBuilder('item');
+
+    if (colour) {
+        queryBuilder.andWhere('item.colour IN (:...colour)', { colour });
+    }
+    
+    if (size) {
+        queryBuilder.andWhere('item.size IN (:...size)', { size });
+    }
+
+    if (condition) {
+        queryBuilder.andWhere('item.condition IN (:...condition)', { condition });
+    }
+
+    if (gender) {
+        queryBuilder.andWhere('item.gender IN (:...gender)', { gender });
+    }
+
+    // TODO do we want brand? Is this the type or company we want to be?
+    // Feel like this promotes the opposite of what we want and will instead will
+    // make ppl buy stuff and not save environment
+
+//    if (brand) {
+//        queryBuilder.andWhere('item.brand IN (:...brand)', { brand });
+//    }
+
+    if (style) {
+        queryBuilder.andWhere('item.style IN (:...style)', { style });
+    }
+
+    if (type) {
+        queryBuilder.andWhere('item.type IN (:...type)', { type });
+    }
+
+    // It has not been liked / disliked before
+    queryBuilder.andWhere(
+        new NotBrackets((qb) => {
+            qb.where('item.clothingId IN (:...liked)', { liked })
+            .orWhere('item.clothingId IN (:...disliked)', { disliked })
+        }),
+    );
+
+    // Max amount items returned
+    queryBuilder.limit(amount);
+
+    // Need to make sure location is close
+    // TODO this will depend on:
+    // 1) How we store location, is it a coords or suburb or what
+    // 2) If we like cats or dogs more
+
+
+    // Return
+    const items = await queryBuilder.getMany();
+
+    console.log(items);
+
+    res.status(200).json(items);
+    return;
+}

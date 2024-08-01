@@ -3,7 +3,8 @@ import { Router } from 'express';
 import { dripCheck } from './health';
 
 import {
-    postClothing
+    postClothing,
+    getClothing
 } from './clothing';
 
 import {
@@ -18,6 +19,9 @@ export const router = Router();
 router.get('/health', dripCheck);
 
 ///// POST
+
+// Gets all the clothes, needs to be post because of large information
+router.post('/clothes/search/:userId', getClothing);
 
 // Adds a new piece of clothing to the database and returns the id given to the piece of clothing
 router.post('/clothes/:userId', postClothing);
