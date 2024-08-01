@@ -4,7 +4,12 @@ import { dripCheck } from './health';
 
 import {
     postClothing,
-    getClothing
+    getClothing,
+    getUserClothing,
+    deleteClothing,
+    likeClothing,
+    dislikeClothing,
+    getLikedClothing
 } from './clothing';
 
 import {
@@ -18,6 +23,21 @@ export const router = Router();
 // Checks connection with the database and server in general
 router.get('/health', dripCheck);
 
+// Gets all the clothes in the database from a specific user
+router.get('/clothes/:userId', getUserClothing);
+
+// Gets all the clothes in the database from a specific user
+router.get('/clothes/liked/:userId', getLikedClothing);
+
+// Likes a piece of clothing
+router.get('/clothes/like/:userId/:clothingId', likeClothing);
+
+// Dislikes a piece of clothing
+router.get('/clothes/dislike/:userId/:clothingId', dislikeClothing);
+
+///// DELETE
+router.delete('/clothes/:userId/:clothingId', deleteClothing);
+
 ///// POST
 
 // Gets all the clothes, needs to be post because of large information
@@ -28,3 +48,4 @@ router.post('/clothes/:userId', postClothing);
 
 // Adds a new user to the database
 router.post('/user/:userId', postUser);
+
