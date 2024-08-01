@@ -158,3 +158,20 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
     res.status(200).json(items);
     return;
 }
+
+export async function getUserClothing(req:Request<UserRouteParams, any, any>, res: Response) {
+    const { userId } = req.params;
+
+    const userRepository = getConnection().getRepository(UserDb);
+    const user = await userRepository.findOne({ where: {userId} });
+
+    if (!user) {
+        res.status(404).json("User not found");
+        return;
+    }
+
+    const clothingRepository = getConnection().getRepository(ClothingDb);
+    const items = await clothingRepository.find({ where: { userId } });
+
+    res.status(200).json(items);
+}
