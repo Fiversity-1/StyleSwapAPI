@@ -6,6 +6,11 @@ export type UserRouteParams = {
     userId: string
 };
 
+export type ClothingRouteParams = {
+    clothingId: number,
+    userId: string
+};
+
 export type ClothingBodyParams = {
     colour: string,
     size: SizeWithNumber,

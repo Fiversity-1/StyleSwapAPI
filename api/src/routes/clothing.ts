@@ -178,3 +178,99 @@ export async function getUserClothing(req:Request<UserRouteParams, any, any>, re
 
     res.status(200).json(items);
 }
+
+export async function deleteClothing(req:Request<ClothingRouteParams, any, any>, res: Response) {
+    const { userId, itemId } = req.params;
+
+    const userRepository = getConnection().getRepository(UserDb);
+    const user = await userRepository.findOne({ where: {userId} });
+
+    if (!user) {
+        res.status(404).json("User not found");
+        return;
+    }
+
+    const clothingRepository = getConnection().getRepository(ClothingDb);
+    const item = await clothingRepository.findOne({ where: { clothingId: itemId } });
+
+    if (item.userId !== userId) {
+        res.status(403).json("Not allowed to delete this item");
+        return;
+    }
+
+    if (!item) {
+        res.status(404).json("Item not found");
+        return;
+    }
+
+    await clothingRepository.remove(item);
+
+    res.status(200).json("Item deleted");
+}
+
+export async function likeClothing(req:Request<ClothingRouteParams, any, any>, res: Response) {
+    const { userId, itemId } = req.params;
+
+    const userRepository = getConnection().getRepository(UserDb);
+    const user = await userRepository.findOne({ where: {userId} });
+
+    if (!user) {
+        res.status(404).json("User not found");
+        return;
+    }
+
+    const clothingRepository = getConnection().getRepository(ClothingDb);
+    const item = await clothingRepository.findOne({ where: { clothingId: itemId } });
+
+    if (!item) {
+        res.status(404).json("Item not found");
+        return;
+    }
+
+    user.liked.push(itemId);
+    await userRepository.save(user);
+
+    res.status(200).json("Item liked");
+}
+
+export async function dislikeClothing(req:Request<ClothingRouteParams, any, any>, res: Response) {
+    const { userId, itemId } = req.params;
+
+    const userRepository = getConnection().getRepository(UserDb);
+    const user = await userRepository.findOne({ where: {userId} });
+
+    if (!user) {
+        res.status(404).json("User not found");
+        return;
+    }
+
+    const clothingRepository = getConnection().getRepository(ClothingDb);
+    const item = await clothingRepository.findOne({ where: { clothingId: itemId } });
+
+    if (!item) {
+        res.status(404).json("Item not found");
+        return;
+    }
+
+    user.disliked.push(itemId);
+    await userRepository.save(user);
+
+    res.status(200).json("Item disliked");
+}
+
+export async function getLikedClothing(req:Request<UserRouteParams, any, any>, res: Response) {
+    const { userId } = req.params;
+
+    const userRepository = getConnection().getRepository(UserDb);
+    const user = await userRepository.findOne({ where: {userId} });
+
+    if (!user) {
+        res.status(404).json("User not found");
+        return;
+    }
+
+    const clothingRepository = getConnection().getRepository(ClothingDb);
+    const items = await clothingRepository.find({ where: { clothingId: user.liked } });
+
+    res.status(200).json(items);
+}
