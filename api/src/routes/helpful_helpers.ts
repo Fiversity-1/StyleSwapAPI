@@ -18,9 +18,9 @@ export function encrypt(text: string): string {
 export function decrypt(text: string): string {
     let textParts = text.split(':');
     let iv = Buffer.from(textParts.shift()!, 'hex');
-    let encrytpedText = Buffer.from(textParts.join(':'), 'hex');
-    let decipher = crypto.createDecipheriv(ialgo, Buffer.from(key), iv);
-    let decyrtped = decipher.update(encryptedText)
+    let encryptedText = Buffer.from(textParts.join(':'), 'hex');
+    let decipher = crypto.createDecipheriv(algo, Buffer.from(key), iv);
+    let decrypted = decipher.update(encryptedText);
     decrypted = Buffer.concat([decrypted, decipher.final()]);
     return decrypted.toString();
 }
