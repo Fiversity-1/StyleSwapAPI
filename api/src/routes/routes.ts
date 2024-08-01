@@ -5,7 +5,11 @@ import { dripCheck } from './health';
 import {
     postClothing,
     getClothing,
-    getUserClothing
+    getUserClothing,
+    deleteClothing,
+    likeClothing,
+    dislikeClothing,
+    getLikedClothing
 } from './clothing';
 
 import {
@@ -21,6 +25,18 @@ router.get('/health', dripCheck);
 
 // Gets all the clothes in the database from a specific user
 router.get('/clothes/:userId', getUserClothing);
+
+// Gets all the clothes in the database from a specific user
+router.get('/clothes/liked/:userId', getLikedClothing);
+
+// Likes a piece of clothing
+router.get('/clothes/like/:userId/:clothingId', likeClothing);
+
+// Dislikes a piece of clothing
+router.get('/clothes/dislike/:userId/:clothingId', dislikeClothing);
+
+///// DELETE
+router.delete('/clothes/:userId/:clothingId', deleteClothing);
 
 ///// POST
 
