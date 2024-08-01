@@ -38,7 +38,7 @@ export class Clothing {
     colour:  string; // Could be an enum or something later
 
     @Column({ nullable: false })
-    sizee: string
+    size: string
 
     @Column({ 
         type: 'enum',
@@ -66,8 +66,7 @@ export class Clothing {
         enum: Type,
         nullable: false
     })
-    typee: Type
-
+    type: Type
 
 }
 

@@ -11,14 +11,14 @@ import { encrypt, decrypt } from './helpful_helpers';
 export async function postClothing(req: Request<UserRouteParams, any, ClothingBodyParams>, res: Response) {
     const { userId } = req.params;
     const { 
-        colour = [],
-        size = [],
-        condition = [],
-        gender = [],
-        brand = [],
-        style = [],
-        bio = [],
-        type = []
+        colour,
+        size,
+        condition,
+        gender,
+        brand,
+        style,
+        bio,
+        type
     } = req.body;
 
     if (!userId) {
@@ -28,6 +28,7 @@ export async function postClothing(req: Request<UserRouteParams, any, ClothingBo
     
     if (!colour || !size || !condition || !type || !bio) {
         res.status(400).json('Missing information');
+        return;
     }
 
     const userRepository = getConnection().getRepository(UserDb);
@@ -116,6 +117,10 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
         queryBuilder.andWhere('item.gender IN (:...gender)', { gender });
     }
 
+    // TODO do we want brand? Is this the type or company we want to be?
+    // Feel like this promotes the opposite of what we want and will instead will
+    // make ppl buy stuff and not save environment
+
 //    if (brand) {
 //        queryBuilder.andWhere('item.brand IN (:...brand)', { brand });
 //    }
@@ -129,11 +134,12 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
     }
 
     // It has not been liked / disliked before
-//    queryBuilder.andWhere(
-//        new NotBrackets((qb) => {
-//            qb.where('item.id IN (:...liked)', { liked }).orWhere('item.id IN (:...disliked)', { disliked })
-//        }),
-//    );
+    queryBuilder.andWhere(
+        new NotBrackets((qb) => {
+            qb.where('item.clothingId IN (:...liked)', { liked })
+            .orWhere('item.clothingId IN (:...disliked)', { disliked })
+        }),
+    );
 
     // Max amount items returned
     queryBuilder.limit(amount);
