@@ -1,7 +1,7 @@
-# FashionFlipApi
+# StyleSwapApi
 <!-- actions --->
 
-### What is Fashion Flip?
+### What is Style Swap?
 <!-- copy from app --->
 
 ### Documentation
