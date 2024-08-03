@@ -36,7 +36,7 @@ export function decrypt(text: string): string {
 }
 
 export function operationExtraction(text: string): ClothingParams {
-    const styles = Object.values(style); 
+    const styles = Object.values(Style); 
     const genders = Object.values(Gender);
     const types = Object.values(Type);
     const sizes = Object.values(Size);
