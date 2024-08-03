@@ -16,8 +16,15 @@ export type ClothingBodyParams = {
     size: SizeWithNumber,
     condition: Condition,
     gender: Gender,
-    brand: string,
     style: Style,
     type: Type,
     bio: string
 };
+
+export type ClothingParams = {
+    size: SizeWithNumber[],
+    condition: Condition[],
+    gender: Gender[],
+    style: Style[],
+    type: Type[],
+}

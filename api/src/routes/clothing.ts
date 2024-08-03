@@ -6,7 +6,7 @@ import { UserRouteParams } from '../types';
 import { getConnection } from '../db';
 import { Clothing as ClothingDb } from '../db/Clothing';
 import { User as UserDb } from '../db/User';
-import { encrypt, decrypt } from './helpful_helpers';
+import { encrypt, decrypt, operationExtraction } from './helpful_helpers';
 
 export async function postClothing(req: Request<UserRouteParams, any, ClothingBodyParams>, res: Response) {
     const { userId } = req.params;
@@ -77,7 +77,8 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
         gender,
         style,
         type,
-        distance
+        distance,
+        search
     } = req.body;
 
     // Get the user and make sure they are legit
@@ -98,6 +99,30 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
 
     const clothingRepository = getConnection().getRepository(ClothingDb);
     
+    const extracted = operationExtraction(search);
+
+    // Add onto each of the arrays
+
+    if (extracted.size) {
+        size.push(...extracted.size);
+    }
+
+    if (extracted.condition) {
+        condition.push(...extracted.condition);
+    }
+
+    if (extracted.gender) {
+        gender.push(...extracted.gender);
+    }
+
+    if (extracted.style) {
+        style.push(...extracted.style);
+    }
+
+    if (extracted.type) {
+        type.push(...extracted.type);
+    }
+
     // Make a dynamic query builder
     const queryBuilder = clothingRepository.createQueryBuilder('item');
 
