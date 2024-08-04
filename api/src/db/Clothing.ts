@@ -7,7 +7,8 @@ import {
     Size,
     Condition,
     Type,
-    Style
+    Style,
+    Colour
 } from '../enums'
 
 
@@ -34,8 +35,13 @@ export class Clothing {
 
     // Tags and allat
 
-    @Column({ nullable: false })
-    colour:  string; // Could be an enum or something later
+    @Column({
+        type: 'enum',
+        array: true,
+        enum: Colour,
+        nullable: false
+    })
+    colour:  Colour[]; // Could be an enum or something later
 
     @Column({ nullable: false })
     size: string
