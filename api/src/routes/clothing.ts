@@ -15,7 +15,6 @@ export async function postClothing(req: Request<UserRouteParams, any, ClothingBo
         size,
         condition,
         gender,
-        brand,
         style,
         bio,
         type
@@ -47,7 +46,6 @@ export async function postClothing(req: Request<UserRouteParams, any, ClothingBo
     newItem.gender = gender;
     newItem.colour = colour;
     newItem.condition = condition;
-    newItem.brand = brand; //TODO brand not in tables ?
     newItem.style = style;
     newItem.type = type;
     newItem.bio = bio;
@@ -143,14 +141,6 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
     if (gender) {
         queryBuilder.andWhere('item.gender IN (:...gender)', { gender });
     }
-
-    // TODO do we want brand? Is this the type or company we want to be?
-    // Feel like this promotes the opposite of what we want and will instead will
-    // make ppl buy stuff and not save environment
-
-//    if (brand) {
-//        queryBuilder.andWhere('item.brand IN (:...brand)', { brand });
-//    }
 
     if (style) {
         queryBuilder.andWhere('item.style IN (:...style)', { style });
@@ -320,7 +310,6 @@ export async function patchClothing(req:Request<ClothingRouteParams, any, Clothi
         size,
         condition,
         gender,
-        brand,
         style,
         bio,
         type
@@ -365,10 +354,6 @@ export async function patchClothing(req:Request<ClothingRouteParams, any, Clothi
 
     if (gender) {
         item.gender = gender;
-    }
-
-    if (brand) {
-        item.brand = brand; //TODO need to check if brand needed
     }
 
     if (style) {
