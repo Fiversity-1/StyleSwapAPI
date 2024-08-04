@@ -8,8 +8,7 @@ import {
     Type,
     Size,
     Condition,
-    Style,
-    Colour
+    Style
 } from '../enums';
 
 dotenv.config();
@@ -42,13 +41,12 @@ export function operationExtraction(text: string): ClothingParams {
     const types = Object.values(Type);
     const sizes = Object.values(Size);
     const conditions = Object.values(Condition);
-    const colours = Object.values(Colour);
 
     const styleMatch = styles.filter((style) => text.includes(style));
     const genderMatch = genders.filter((gender) => text.includes(gender));
     const typeMatch = types.filter((type) => text.includes(type));
     // Add in size matching for numbers should be like size 9 or SiZe 10
-    let sizeMatch = sizes.filter((size) => text.includes(size));
+    sizeMatch = sizes.filter((size) => text.includes(size));
 
     const regex = /size\s*(\d+)/i;
     const match = text.match(regex);
@@ -60,21 +58,12 @@ export function operationExtraction(text: string): ClothingParams {
     }
 
     const conditionMatch = conditions.filter((condition) => text.includes(condition));
-    const colourMatch = colours.filter((colour) => text.includes(colour));
 
     return {
-        style: handleEmptyArray(styleMatch),
-        gender: handleEmptyArray(genderMatch),
-        type: handleEmptyArray(typeMatch),
-        size: handleEmptyArray(sizeMatch),
-        condition: handleEmptyArray(conditionMatch),
-        colour: handleEmptyArray(colourMatch)
-    };
-}
-
-function handleEmptyArray(array: T[]): T[] | null {
-    if (array.length === 0) {
-        return null;
+        style: styleMatch as Style[],
+        gender: genderMatch as Gender[],
+        type: typeMatch as Type[],
+        size: sizeMatch as SizeWithNumber[],
+        condition: conditionMatch as Condition[]
     }
-    return array;
 }

@@ -1,4 +1,4 @@
-import { Gender, Size, Condition, Type, Style, Colour } from './enums';
+import { Gender, Size, Condition, Type, Style } from './enums';
 
 export type SizeWithNumber = Size | number;
 
@@ -27,5 +27,4 @@ export type ClothingParams = {
     gender: Gender[],
     style: Style[],
     type: Type[],
-    colour: Colour[]
 }

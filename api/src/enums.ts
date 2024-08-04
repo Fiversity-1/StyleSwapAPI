@@ -1,20 +1,3 @@
-export enum Colour {
-    RED = 'red',
-    ORANGE = 'orange',
-    YELLOW = 'yellow',
-    GREEN = 'green',
-    BLUE = 'blue',
-    PURPLE = 'purple',
-    PINK = 'pink',
-    BROWN = 'brown',
-    TAN = 'tan',
-    GREY = 'grey',
-    BLACK = 'black',
-    WHITE = 'white',
-    GOLD = 'gold',
-    OTHER = 'other'
-}
-
 // This code might get me cancelled
 export enum Gender {
     MALE = 'male',
