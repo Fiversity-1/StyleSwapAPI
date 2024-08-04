@@ -9,7 +9,8 @@ import {
     deleteClothing,
     likeClothing,
     dislikeClothing,
-    getLikedClothing
+    getLikedClothing,
+    patchClothing
 } from './clothing';
 
 import {
