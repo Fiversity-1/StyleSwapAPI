@@ -1,7 +1,12 @@
 import { Request, Response } from 'express';
 import { NotBrackets } from 'typeorm';
 
-import { UserRouteParams } from '../types';
+import {
+    UserRouteParams,
+    ClothingBodyParams,
+    ClothingGetBodyParams,
+    ClothingRouteParams    
+} from '../types';
 
 import { getConnection } from '../db';
 import { Clothing as ClothingDb } from '../db/Clothing';
@@ -15,7 +20,6 @@ export async function postClothing(req: Request<UserRouteParams, any, ClothingBo
         size,
         condition,
         gender,
-        brand,
         style,
         bio,
         type
@@ -47,7 +51,6 @@ export async function postClothing(req: Request<UserRouteParams, any, ClothingBo
     newItem.gender = gender;
     newItem.colour = colour;
     newItem.condition = condition;
-    newItem.brand = brand;
     newItem.style = style;
     newItem.type = type;
     newItem.bio = bio;
@@ -70,7 +73,7 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
     const { userId } = req.params;
     let amount = req.query.amount ?? 20;
 
-    const {
+    let {
         colour,
         size,
         condition,
@@ -105,23 +108,45 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
         // Add onto each of the arrays
     
         if (extracted.size) {
+            if (!size) {
+                size = [];
+            }
             size.push(...extracted.size);
         }
     
         if (extracted.condition) {
+            if (!condition) {
+                condition = [];
+            }
             condition.push(...extracted.condition);
         }
     
         if (extracted.gender) {
+            if (!gender) {
+                gender = [];
+            }
             gender.push(...extracted.gender);
         }
     
         if (extracted.style) {
+            if (!style) {
+                style = [];
+            }
             style.push(...extracted.style);
         }
     
         if (extracted.type) {
+            if (!type) {
+                type = [];
+            }
             type.push(...extracted.type);
+        }
+
+        if (extracted.colour) {
+            if (!colour) {
+                colour = [];
+            }
+            colour.push(...extracted.colour);
         }
     }
 
@@ -129,7 +154,7 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
     const queryBuilder = clothingRepository.createQueryBuilder('item');
 
     if (colour) {
-        queryBuilder.andWhere('item.colour IN (:...colour)', { colour });
+        queryBuilder.andWhere('ARRAY[:...colour]::text[] && item.colour::text[]', { colour });
     }
     
     if (size) {
@@ -143,14 +168,6 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
     if (gender) {
         queryBuilder.andWhere('item.gender IN (:...gender)', { gender });
     }
-
-    // TODO do we want brand? Is this the type or company we want to be?
-    // Feel like this promotes the opposite of what we want and will instead will
-    // make ppl buy stuff and not save environment
-
-//    if (brand) {
-//        queryBuilder.andWhere('item.brand IN (:...brand)', { brand });
-//    }
 
     if (style) {
         queryBuilder.andWhere('item.style IN (:...style)', { style });
@@ -182,8 +199,6 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
 
     // Return
     const items = await queryBuilder.getMany();
-
-    console.log(items);
 
     res.status(200).json(items);
     return;
