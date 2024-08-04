@@ -2,6 +2,12 @@ import { Request, Response } from 'express';
 import { NotBrackets } from 'typeorm';
 
 import type { UserRouteParams, ClothingBodyParams, ClothingRouteParams } from '../types';
+import {
+    UserRouteParams,
+    ClothingBodyParams,
+    ClothingGetBodyParams,
+    ClothingRouteParams    
+} from '../types';
 
 import { getConnection } from '../db';
 import { Clothing as ClothingDb } from '../db/Clothing';
