@@ -49,3 +49,7 @@ router.post('/clothes/:userId', postClothing);
 // Adds a new user to the database
 router.post('/user/:userId', postUser);
 
+///// PATCH
+
+// Updates clothing item
+router.patch('/clothes/:userId/:clothingId', patchClothing);
