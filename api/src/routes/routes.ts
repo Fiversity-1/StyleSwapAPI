@@ -9,7 +9,8 @@ import {
     deleteClothing,
     likeClothing,
     dislikeClothing,
-    getLikedClothing
+    getLikedClothing,
+    patchClothing
 } from './clothing';
 
 import {
@@ -49,3 +50,7 @@ router.post('/clothes/:userId', postClothing);
 // Adds a new user to the database
 router.post('/user/:userId', postUser);
 
+///// PATCH
+
+// Updates clothing item
+router.patch('/clothes/edit/:userId/:clothingId', patchClothing);

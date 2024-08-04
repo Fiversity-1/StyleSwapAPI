@@ -326,3 +326,82 @@ export async function getLikedClothing(req:Request<UserRouteParams, any, any>, r
 
     res.status(200).json(items);
 }
+
+
+export async function patchClothing(req:Request<ClothingRouteParams, any, ClothingBodyParams>, res: Response) {
+    const { userId, clothingId } = req.params;
+    const { 
+        colour,
+        size,
+        condition,
+        gender,
+        brand,
+        style,
+        bio,
+        type
+    } = req.body;
+
+    // Validate userId
+    const userRepository = getConnection().getRepository(UserDb);
+    const user = await userRepository.findOne({ where: {userId} });
+
+    if (!userId) {
+        res.status(404).json('User not found');
+        return;
+    }
+
+    // Validate clothingId
+    const clothingRepository = getConnection().getRepository(ClothingDb);
+    const item = await clothingRepository.findOne({ where: { clothingId } });
+
+    if (!item) {
+        res.status(404).json('Item not found');
+        return;
+    }
+
+    // Checking user owns the clothes
+    if (item.userId !== userId) {
+        res.status(403).json('Unauthorised to edit this item');
+        return;
+    }
+
+    // Update the item
+    if (colour) {
+        item.colour = colour;
+    }
+
+    if (size) {
+        item.size = size;
+    }
+
+    if (condition) {
+        item.condition = condition;
+    }
+
+    if (gender) {
+        item.gender = gender;
+    }
+
+    if (brand) {
+        item.brand = brand; //TODO need to check if brand needed
+    }
+
+    if (style) {
+        item.style = style;
+    }
+
+    if (bio) {
+        item.bio = bio;
+    }
+
+    if (type) {
+        item.type = type;
+    }
+
+    await clothingRepository.save(item);
+
+    res.status(200).json('Item updated');
+    return;
+
+  }
+  
