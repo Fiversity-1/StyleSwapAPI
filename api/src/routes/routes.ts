@@ -53,4 +53,4 @@ router.post('/user/:userId', postUser);
 ///// PATCH
 
 // Updates clothing item
-router.patch('/clothes/:userId/:clothingId', patchClothing);
+router.patch('/clothes/edit/:userId/:clothingId', patchClothing);
