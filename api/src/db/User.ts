@@ -6,6 +6,9 @@ export class User {
     userId: string;
 
     @Column({ nullable: false })
+    name: string;
+
+    @Column({ nullable: false })
     location: string;
 
     @Column({ nullable: true })

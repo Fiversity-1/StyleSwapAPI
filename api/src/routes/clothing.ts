@@ -335,7 +335,6 @@ export async function patchClothing(req:Request<ClothingRouteParams, any, Clothi
         size,
         condition,
         gender,
-        brand,
         style,
         bio,
         type
@@ -382,10 +381,6 @@ export async function patchClothing(req:Request<ClothingRouteParams, any, Clothi
         item.gender = gender;
     }
 
-    if (brand) {
-        item.brand = brand; //TODO need to check if brand needed
-    }
-
     if (style) {
         item.style = style;
     }
@@ -403,5 +398,4 @@ export async function patchClothing(req:Request<ClothingRouteParams, any, Clothi
     res.status(200).json('Item updated');
     return;
 
-  }
-  
+}
