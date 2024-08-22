@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 mkdir docker-cert
 echo "${DOCKER_CA}" >docker-cert/ca.pem
