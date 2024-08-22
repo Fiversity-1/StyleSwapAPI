@@ -46,28 +46,28 @@ export class Clothing {
     @Column({ nullable: false })
     size: string
 
-    @Column({ 
+    @Column({
         type: 'enum',
         enum: Gender,
         default: Gender.UNISEX
     })
     gender: Gender
 
-    @Column({ 
+    @Column({
         type: 'enum',
         enum: Condition,
         nullable: false
     })
     condition: Condition
 
-    @Column({ 
+    @Column({
         type: 'enum',
         enum: Style,
         nullable: true
     })
     style: Style
 
-    @Column({ 
+    @Column({
         type: 'enum',
         enum: Type,
         nullable: false
@@ -75,5 +75,3 @@ export class Clothing {
     type: Type
 
 }
-
-

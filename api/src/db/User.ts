@@ -13,7 +13,7 @@ export class User {
 
     @Column({ nullable: true })
     picture: string;
-    
+
     // Does the default value seem ok to yous?
     // Without it I need like 2-3 extras ifs
     @Column("integer", { array: true, default: [0] })
@@ -21,12 +21,11 @@ export class User {
 
     @Column("integer", { array: true, default: [0] })
     disliked: number[];
-    
-    @Column({ 
+
+    @Column({
         nullable: false,
         default: [],
-        type: "simple-array" 
+        type: "simple-array"
     })
     matched: string[];
 }
-

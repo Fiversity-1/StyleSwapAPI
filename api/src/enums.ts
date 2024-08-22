@@ -43,7 +43,7 @@ export enum Condition {
     FAIR = 'fair'
 }
 
-export enum Type { 
+export enum Type {
     HAT = 'hat',
     SCARF = 'scarf',
     TIE = 'tie',
@@ -68,4 +68,3 @@ export enum Style {
     S50 = '50s',
     VINTAGE = 'vintage'
 }
-

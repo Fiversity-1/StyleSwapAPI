@@ -8,7 +8,7 @@ import { encrypt } from './helpful_helpers';
 
 export async function postUser(req: Request<UserRouteParams, any, UserBodyParams>, res: Response) {
    const { userId } = req.params;
-   
+
    const { location } = req.body;
 
    if (!userId) {

@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 
 import { ClothingParams, SizeWithNumber } from '../types';
 
-import { 
+import {
     Gender,
     Type,
     Size,
@@ -37,7 +37,7 @@ export function decrypt(text: string): string {
 }
 
 export function operationExtraction(text: string): ClothingParams {
-    const styles = Object.values(Style); 
+    const styles = Object.values(Style);
     const genders = Object.values(Gender);
     const types = Object.values(Type);
     const sizes = Object.values(Size);
@@ -52,7 +52,7 @@ export function operationExtraction(text: string): ClothingParams {
 
     const regex = /size\s*(\d+)/i;
     const match = text.match(regex);
-    
+
     if (match) {
         sizeMatch.push({
             number: parseInt(match[1])

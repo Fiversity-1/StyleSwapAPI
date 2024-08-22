@@ -5,7 +5,7 @@ import {
     UserRouteParams,
     ClothingBodyParams,
     ClothingGetBodyParams,
-    ClothingRouteParams    
+    ClothingRouteParams
 } from '../types';
 
 import { getConnection } from '../db';
@@ -15,7 +15,7 @@ import { encrypt, decrypt, operationExtraction } from './helpful_helpers';
 
 export async function postClothing(req: Request<UserRouteParams, any, ClothingBodyParams>, res: Response) {
     const { userId } = req.params;
-    const { 
+    const {
         colour,
         size,
         condition,
@@ -29,7 +29,7 @@ export async function postClothing(req: Request<UserRouteParams, any, ClothingBo
         res.status(400).json('Missing userId');
         return;
     }
-    
+
     if (!colour || !size || !condition || !type || !bio) {
         res.status(400).json('Missing information');
         return;
@@ -44,7 +44,7 @@ export async function postClothing(req: Request<UserRouteParams, any, ClothingBo
     }
 
     const clothingRepository = getConnection().getRepository(ClothingDb);
-    
+
     const newItem = new ClothingDb();
 
     newItem.size = size;
@@ -87,7 +87,7 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
     // Get the user and make sure they are legit
     const userRepository = getConnection().getRepository(UserDb);
     const user = await userRepository.findOne({ where: {userId} });
-    
+
     if (!user) {
         res.status(404).json("User not found");
         return;
@@ -101,40 +101,40 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
     let loc = decrypt(user.location);
 
     const clothingRepository = getConnection().getRepository(ClothingDb);
-   
+
     if (search) {
         const extracted = operationExtraction(search);
-    
+
         // Add onto each of the arrays
-    
+
         if (extracted.size) {
             if (!size) {
                 size = [];
             }
             size.push(...extracted.size);
         }
-    
+
         if (extracted.condition) {
             if (!condition) {
                 condition = [];
             }
             condition.push(...extracted.condition);
         }
-    
+
         if (extracted.gender) {
             if (!gender) {
                 gender = [];
             }
             gender.push(...extracted.gender);
         }
-    
+
         if (extracted.style) {
             if (!style) {
                 style = [];
             }
             style.push(...extracted.style);
         }
-    
+
         if (extracted.type) {
             if (!type) {
                 type = [];
@@ -156,7 +156,7 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
     if (colour) {
         queryBuilder.andWhere('ARRAY[:...colour]::text[] && item.colour::text[]', { colour });
     }
-    
+
     if (size) {
         queryBuilder.andWhere('item.size IN (:...size)', { size });
     }
@@ -330,7 +330,7 @@ export async function getLikedClothing(req:Request<UserRouteParams, any, any>, r
 
 export async function patchClothing(req:Request<ClothingRouteParams, any, ClothingBodyParams>, res: Response) {
     const { userId, clothingId } = req.params;
-    const { 
+    const {
         colour,
         size,
         condition,
