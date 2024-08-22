@@ -31,6 +31,8 @@ docker run -d \
     --env DB_USER=${DB_USER} \
     --env DB_PASSWORD=${DB_PASSWORD} \
     --env DB_DATABASE=${DB_DATABASE} \
+    --env KEY=${KEY} \
+    --env IV=${IV} \
     tablespoon/styleswapapi:latest
 for x in $OLDCONTAINERS; do
     docker rm -f ${x}
