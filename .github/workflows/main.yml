@@ -36,3 +36,6 @@ jobs:
           DOCKER_KEY: ${{secrets.DOCKER_KEY}}
           DOCKER_CERT: ${{secrets.DOCKER_CERT}}
           DOCKER_HOST: ${{secrets.DOCKER_HOST}}
+          DB_USER: ${{secrets.DB_USER}}
+          DB_PASSWORD: ${{secrets.DB_PASSWORD}}
+          DB_DATABASE: ${{secrets.DB_DATABASE}}
