@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { NotBrackets } from 'typeorm';
+import { NotBrackets, In } from 'typeorm';
 
 import {
     UserRouteParams,
@@ -189,7 +189,7 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
     queryBuilder.andWhere('item.userId != :userId', { userId });
 
     // Max amount items returned
-    queryBuilder.limit(amount);
+    queryBuilder.limit(Number(amount));
 
     // Need to make sure location is close
     // TODO this will depend on:
@@ -235,13 +235,13 @@ export async function deleteClothing(req:Request<ClothingRouteParams, any, any>,
     const clothingRepository = getConnection().getRepository(ClothingDb);
     const item = await clothingRepository.findOne({ where: { clothingId: clothingId } });
 
-    if (item.userId !== userId) {
-        res.status(403).json("Not allowed to delete this item");
+    if (!item) {
+        res.status(404).json("Item not found");
         return;
     }
 
-    if (!item) {
-        res.status(404).json("Item not found");
+    if (item.userId !== userId) {
+        res.status(403).json("Not allowed to delete this item");
         return;
     }
 
@@ -322,7 +322,7 @@ export async function getLikedClothing(req:Request<UserRouteParams, any, any>, r
     }
 
     const clothingRepository = getConnection().getRepository(ClothingDb);
-    const items = await clothingRepository.find({ where: { clothingId: user.liked } });
+    const items = await clothingRepository.find({ where: { clothingId: In(user.liked) } });
 
     res.status(200).json(items);
 }

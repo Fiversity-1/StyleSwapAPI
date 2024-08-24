@@ -11,15 +11,15 @@ export class User {
     @Column({ nullable: false })
     location: string;
 
-    @Column({ nullable: true })
+    @Column({ nullable: false })
     picture: string;
 
     // Does the default value seem ok to yous?
     // Without it I need like 2-3 extras ifs
-    @Column("integer", { array: true, default: [0] })
+    @Column({ type: 'int', array: true, default: [0] })
     liked: number[];
 
-    @Column("integer", { array: true, default: [0] })
+    @Column({ type: 'int', array: true, default: [0] })
     disliked: number[];
 
     @Column({

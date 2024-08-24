@@ -14,8 +14,8 @@ import {
 
 dotenv.config();
 
-const key = Buffer.from(process.env.KEY, 'hex');
-const iv = Buffer.from(process.env.IV, 'hex');
+const key = Buffer.from(process.env.KEY || "", 'hex');
+const iv = Buffer.from(process.env.IV || "", 'hex');
 
 const algo = 'aes-256-cbc';
 
@@ -48,15 +48,13 @@ export function operationExtraction(text: string): ClothingParams {
     const genderMatch = genders.filter((gender) => text.includes(gender));
     const typeMatch = types.filter((type) => text.includes(type));
     // Add in size matching for numbers should be like size 9 or SiZe 10
-    let sizeMatch = sizes.filter((size) => text.includes(size));
+    let sizeMatch: SizeWithNumber[] = sizes.filter((size) => text.includes(size));
 
     const regex = /size\s*(\d+)/i;
     const match = text.match(regex);
 
     if (match) {
-        sizeMatch.push({
-            number: parseInt(match[1])
-        });
+        sizeMatch.push(parseInt(match[1]));
     }
 
     const conditionMatch = conditions.filter((condition) => text.includes(condition));
@@ -72,7 +70,7 @@ export function operationExtraction(text: string): ClothingParams {
     };
 }
 
-function handleEmptyArray(array: T[]): T[] | null {
+function handleEmptyArray<T>(array: T[]): T[] | null {
     if (array.length === 0) {
         return null;
     }

@@ -6,13 +6,28 @@ export type UserRouteParams = {
     userId: string
 };
 
+export type UserBodyParams = {
+    location: string
+};
+
 export type ClothingRouteParams = {
     clothingId: number,
     userId: string
 };
 
+export type ClothingGetBodyParams = {
+    colour: Colour[],
+    size: SizeWithNumber[],
+    condition: Condition[],
+    gender: Gender[],
+    style: Style[],
+    type: Type[],
+    distance: number,
+    search: string
+};
+
 export type ClothingBodyParams = {
-    colour: string,
+    colour: Colour[],
     size: SizeWithNumber,
     condition: Condition,
     gender: Gender,
@@ -22,10 +37,10 @@ export type ClothingBodyParams = {
 };
 
 export type ClothingParams = {
-    size: SizeWithNumber[],
-    condition: Condition[],
-    gender: Gender[],
-    style: Style[],
-    type: Type[],
-    colour: Colour[]
+    size: SizeWithNumber[] | null,
+    condition: Condition[] | null,
+    gender: Gender[] | null,
+    style: Style[] | null,
+    type: Type[] | null,
+    colour: Colour[] | null
 }

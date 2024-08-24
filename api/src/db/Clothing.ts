@@ -11,6 +11,10 @@ import {
     Colour
 } from '../enums'
 
+import {
+    SizeWithNumber
+} from '../types'
+
 
 @Entity()
 export class Clothing {
@@ -20,7 +24,7 @@ export class Clothing {
     @ManyToOne(() => User, { nullable: false })
     @JoinColumn({
         name: 'userId',
-        referenceColumnName: 'userId',
+        referencedColumnName: 'userId',
     })
     user: User;
 
@@ -28,7 +32,7 @@ export class Clothing {
     userId: User['userId'];
 
     @Column({ nullable: true })
-    picture: string;
+    picture: string | null;
 
     @Column({ nullable: false })
     bio: string;
@@ -41,10 +45,10 @@ export class Clothing {
         enum: Colour,
         nullable: false
     })
-    colour:  Colour[]; // Could be an enum or something later
+    colour:  Colour[];
 
     @Column({ nullable: false })
-    size: string
+    size: SizeWithNumber
 
     @Column({
         type: 'enum',
@@ -65,7 +69,7 @@ export class Clothing {
         enum: Style,
         nullable: true
     })
-    style: Style
+    style: Style | null
 
     @Column({
         type: 'enum',

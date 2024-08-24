@@ -1,8 +1,12 @@
 import { Request, Response } from 'express';
-import { UserRouteParams } from '../types';
 
 import { getConnection } from '../db';
 import { User as UserDb } from '../db/User';
+
+import {
+    UserBodyParams,
+    UserRouteParams
+} from '../types';
 
 import { encrypt } from './helpful_helpers';
 
