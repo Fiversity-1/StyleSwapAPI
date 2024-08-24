@@ -25,6 +25,8 @@ jobs:
         with:
           push: true
           tags: user/repo:latest
+          context: ./api
+          file: ./api/DockerFile
   deploy:
     runs-on: ubuntu-latest
     needs: build
