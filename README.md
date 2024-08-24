@@ -1,5 +1,6 @@
 # StyleSwapApi
 <!-- actions --->
+[![.github/workflows/main.yml](https://github.com/Fiversity-1/StyleSwapAPI/actions/workflows/main.yml/badge.svg)](https://github.com/Fiversity-1/StyleSwapAPI/actions/workflows/main.yml)
 
 ### What is Style Swap?
 <!-- copy from app --->
