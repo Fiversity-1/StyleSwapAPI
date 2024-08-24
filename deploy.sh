@@ -20,7 +20,7 @@ docker run -d \
     -p 80 -p 443 \
     --env POSTGRES_USER=${DB_USER} \
     --env POSTGRES_PASSWORD=${DB_PASSWORD} \
-    --env POSTGRES_DATABASE=${DB_DATABASE}
+    --env POSTGRES_DATABASE=${DB_DATABASE} \
 postgres
 
 # Runs the API image
