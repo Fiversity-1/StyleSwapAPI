@@ -15,17 +15,23 @@ const User_1 = require("../db/User");
 const helpful_helpers_1 = require("./helpful_helpers");
 function postUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
+        console.log("New User Added!");
         const { userId } = req.params;
-        const { location } = req.body;
+        let { loc } = req.body;
+        if (!loc) {
+            loc = "help";
+        }
         if (!userId) {
             res.status(400).json('Missing userId');
+            console.warn("Missing userId when adding a user!");
             return;
         }
         const userRepository = (0, db_1.getConnection)().getRepository(User_1.User);
         const newUser = new User_1.User();
-        const encryptedLocation = (0, helpful_helpers_1.encrypt)(location);
+        const encryptedLocation = (0, helpful_helpers_1.encrypt)(loc);
         newUser.location = encryptedLocation;
         newUser.userId = userId;
+        newUser.picture = "help";
         // Add picture logic
         const savedUser = yield userRepository.save(newUser);
         res.status(201).json('Made a user');

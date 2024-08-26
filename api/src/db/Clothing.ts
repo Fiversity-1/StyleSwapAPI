@@ -32,7 +32,7 @@ export class Clothing {
     userId: User['userId'];
 
     @Column({ nullable: true })
-    picture: string | null;
+    picture: string;
 
     @Column({ nullable: false })
     bio: string;
@@ -47,7 +47,7 @@ export class Clothing {
     })
     colour:  Colour[];
 
-    @Column({ nullable: false })
+    @Column({ type: 'jsonb', nullable: false })
     size: SizeWithNumber
 
     @Column({

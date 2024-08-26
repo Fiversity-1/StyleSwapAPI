@@ -7,7 +7,7 @@ export type UserRouteParams = {
 };
 
 export type UserBodyParams = {
-    location: string
+    loc: string
 };
 
 export type ClothingRouteParams = {

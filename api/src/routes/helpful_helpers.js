@@ -33,23 +33,20 @@ const crypto_1 = __importDefault(require("crypto"));
 const dotenv = __importStar(require("dotenv"));
 const enums_1 = require("../enums");
 dotenv.config();
-const key = Buffer.from(process.env.KEY || "", 'hex');
-const iv = Buffer.from(process.env.IV || "", 'hex');
-const algo = 'aes-256-cbc';
+const KEY = crypto_1.default.randomBytes(32);
+const IV = crypto_1.default.randomBytes(16);
+const ALGO = 'aes-256-cbc';
 function encrypt(text) {
-    let cipher = crypto_1.default.createCipheriv(algo, key, iv);
-    let encrypted = cipher.update(text);
-    encrypted = Buffer.concat([encrypted, cipher.final()]);
-    return iv.toString('hex') + ':' + encrypted.toString('hex');
+    console.log(text);
+    let cipher = crypto_1.default.createCipheriv(ALGO, KEY, IV);
+    let encrypted = cipher.update(text, "utf8", "base64");
+    encrypted += cipher.final("base64");
+    return encrypted;
 }
 function decrypt(text) {
-    let textParts = text.split(':');
-    let iv = Buffer.from(textParts.shift(), 'hex');
-    let encryptedText = Buffer.from(textParts.join(':'), 'hex');
-    let decipher = crypto_1.default.createDecipheriv(algo, Buffer.from(key), iv);
-    let decrypted = decipher.update(encryptedText);
-    decrypted = Buffer.concat([decrypted, decipher.final()]);
-    return decrypted.toString();
+    let decipher = crypto_1.default.createDecipheriv(ALGO, KEY, IV);
+    let decrypted = decipher.update(text, "base64", "utf8");
+    return decrypted + decipher.final("utf8");
 }
 function operationExtraction(text) {
     const styles = Object.values(enums_1.Style);

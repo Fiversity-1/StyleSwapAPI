@@ -34,7 +34,7 @@ __decorate([
 ], Clothing.prototype, "userId", void 0);
 __decorate([
     (0, typeorm_1.Column)({ nullable: true }),
-    __metadata("design:type", Object)
+    __metadata("design:type", String)
 ], Clothing.prototype, "picture", void 0);
 __decorate([
     (0, typeorm_1.Column)({ nullable: false }),
@@ -50,7 +50,7 @@ __decorate([
     __metadata("design:type", Array)
 ], Clothing.prototype, "colour", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: false }),
+    (0, typeorm_1.Column)({ type: 'jsonb', nullable: false }),
     __metadata("design:type", Object)
 ], Clothing.prototype, "size", void 0);
 __decorate([
