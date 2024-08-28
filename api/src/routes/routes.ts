@@ -7,14 +7,13 @@ import {
     getClothing,
     getUserClothing,
     deleteClothing,
-    likeClothing,
-    dislikeClothing,
     getLikedClothing,
     patchClothing
 } from './clothing';
 
 import {
-    postUser
+    postUser,
+    swipe
 } from './user';
 
 export const router = Router();
@@ -31,10 +30,7 @@ router.get('/clothes/:userId', getUserClothing);
 router.get('/clothes/liked/:userId', getLikedClothing);
 
 // Likes a piece of clothing
-router.get('/clothes/like/:userId/:clothingId', likeClothing);
-
-// Dislikes a piece of clothing
-router.get('/clothes/dislike/:userId/:clothingId', dislikeClothing);
+router.get('/clothes/like/:userId/:clotheId', swipe);
 
 ///// DELETE
 router.delete('/clothes/:userId/:clothingId', deleteClothing);
@@ -43,6 +39,7 @@ router.delete('/clothes/:userId/:clothingId', deleteClothing);
 
 // Gets all the clothes, needs to be post because of large information
 router.post('/clothes/search/:userId', getClothing);
+router.get('/clothes/search/:userId', dripCheck);
 
 // Adds a new piece of clothing to the database and returns the id given to the piece of clothing
 router.post('/clothes/:userId', postClothing);

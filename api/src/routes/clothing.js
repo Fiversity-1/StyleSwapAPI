@@ -13,8 +13,6 @@ exports.postClothing = postClothing;
 exports.getClothing = getClothing;
 exports.getUserClothing = getUserClothing;
 exports.deleteClothing = deleteClothing;
-exports.likeClothing = likeClothing;
-exports.dislikeClothing = dislikeClothing;
 exports.getLikedClothing = getLikedClothing;
 exports.patchClothing = patchClothing;
 const typeorm_1 = require("typeorm");
@@ -195,54 +193,6 @@ function deleteClothing(req, res) {
         }
         yield clothingRepository.remove(item);
         res.status(200).json("Item deleted");
-    });
-}
-function likeClothing(req, res) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const { userId, clothingId } = req.params;
-        const userRepository = (0, db_1.getConnection)().getRepository(User_1.User);
-        const user = yield userRepository.findOne({ where: { userId } });
-        if (!user) {
-            res.status(404).json("User not found");
-            return;
-        }
-        if (!clothingId) {
-            res.status(400).json("Missing clothingId");
-            return;
-        }
-        const clothingRepository = (0, db_1.getConnection)().getRepository(Clothing_1.Clothing);
-        const item = yield clothingRepository.findOne({ where: { clothingId: clothingId } });
-        if (!item) {
-            res.status(404).json("Item not found");
-            return;
-        }
-        user.liked.push(clothingId);
-        yield userRepository.save(user);
-        res.status(200).json("Item liked");
-    });
-}
-function dislikeClothing(req, res) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const { userId, clothingId } = req.params;
-        const userRepository = (0, db_1.getConnection)().getRepository(User_1.User);
-        const user = yield userRepository.findOne({ where: { userId } });
-        if (!user) {
-            res.status(404).json("User not found");
-            return;
-        }
-        if (!clothingId) {
-            res.status(400).json("Missing clothingId");
-            return;
-        }
-        const clothingRepository = (0, db_1.getConnection)().getRepository(Clothing_1.Clothing);
-        const item = yield clothingRepository.findOne({ where: { clothingId: clothingId } });
-        if (!item) {
-            res.status(404).json("Item not found");
-            return;
-        }
-        user.disliked.push(clothingId);
-        yield userRepository.save(user);
-        res.status(200).json("Item disliked");
     });
 }
 function getLikedClothing(req, res) {

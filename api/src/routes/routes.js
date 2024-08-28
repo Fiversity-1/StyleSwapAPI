@@ -14,14 +14,13 @@ exports.router.get('/clothes/:userId', clothing_1.getUserClothing);
 // Gets all the clothes in the database from a specific user
 exports.router.get('/clothes/liked/:userId', clothing_1.getLikedClothing);
 // Likes a piece of clothing
-exports.router.get('/clothes/like/:userId/:clothingId', clothing_1.likeClothing);
-// Dislikes a piece of clothing
-exports.router.get('/clothes/dislike/:userId/:clothingId', clothing_1.dislikeClothing);
+exports.router.get('/clothes/like/:userId/:clotheId', user_1.swipe);
 ///// DELETE
 exports.router.delete('/clothes/:userId/:clothingId', clothing_1.deleteClothing);
 ///// POST
 // Gets all the clothes, needs to be post because of large information
 exports.router.post('/clothes/search/:userId', clothing_1.getClothing);
+exports.router.get('/clothes/search/:userId', health_1.dripCheck);
 // Adds a new piece of clothing to the database and returns the id given to the piece of clothing
 exports.router.post('/clothes/:userId', clothing_1.postClothing);
 // Adds a new user to the database
