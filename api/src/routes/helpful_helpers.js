@@ -29,6 +29,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.encrypt = encrypt;
 exports.decrypt = decrypt;
 exports.operationExtraction = operationExtraction;
+exports.haversine = haversine;
 const crypto_1 = __importDefault(require("crypto"));
 const dotenv = __importStar(require("dotenv"));
 const enums_1 = require("../enums");
@@ -81,4 +82,15 @@ function handleEmptyArray(array) {
         return null;
     }
     return array;
+}
+function haversine(lat1, lon1, lat2, lon2) {
+    const toRadians = (degrees) => degrees * (Math.PI / 180);
+    const dlat = toRadians(lat2 - lat1);
+    const dlon = toRadians(lon2 - lon1);
+    const a = Math.sin(dlat / 2) ** 2 +
+        Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) *
+            Math.sin(dlon / 2) ** 2;
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const radius = 6371;
+    return radius * c;
 }
