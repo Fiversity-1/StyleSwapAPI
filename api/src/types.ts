@@ -47,3 +47,12 @@ export type ClothingParams = {
     type: Type[] | null,
     colour: Colour[] | null
 }
+
+export type SwipeRouteParams = {
+    clotheId: number,
+    userId: string,
+}
+
+export type SwipeQueryParams = {
+    like: boolean
+}
