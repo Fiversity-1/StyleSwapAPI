@@ -6,7 +6,10 @@ export class User {
     userId: string;
 
     @Column({ nullable: false })
-    location: string;
+    lat: string;
+
+    @Column({ nullable: false })
+    lon: string;
 
     @Column({ nullable: false })
     picture: string;

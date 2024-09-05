@@ -11,7 +11,12 @@ import {
 import { getConnection } from '../db';
 import { Clothing as ClothingDb } from '../db/Clothing';
 import { User as UserDb } from '../db/User';
-import { encrypt, decrypt, operationExtraction } from './helpful_helpers';
+import {
+    encrypt,
+    decrypt,
+    operationExtraction,
+    calculateDistance
+} from './helpful_helpers';
 
 export async function postClothing(req: Request<UserRouteParams, any, ClothingBodyParams>, res: Response) {
     const { userId } = req.params;
@@ -81,7 +86,9 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
         style,
         type,
         distance,
-        search
+        search,
+        lat,
+        lon
     } = req.body;
 
     // Get the user and make sure they are legit
@@ -96,9 +103,6 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
     // Get the previous liked and disliked items from that user so we can't give dups
     const liked = user.liked;
     const disliked = user.liked;
-
-    // Get the location of the user so we can make sure the clothes are close
-    let loc = decrypt(user.location);
 
     const clothingRepository = getConnection().getRepository(ClothingDb);
 
@@ -153,6 +157,9 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
     // Make a dynamic query builder
     const queryBuilder = clothingRepository.createQueryBuilder('item');
 
+    queryBuilder.leftJoinAndSelect("clothing.user", "user");
+    queryBuilder.select(["clothing.clothingId", "user.lat", "user.long"]);
+
     if (colour) {
         queryBuilder.andWhere('ARRAY[:...colour]::text[] && item.colour::text[]', { colour });
     }
@@ -191,14 +198,11 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
     // Max amount items returned
     queryBuilder.limit(Number(amount));
 
-    // Need to make sure location is close
-    // TODO this will depend on:
-    // 1) How we store location, is it a coords or suburb or what
-    // 2) If we like cats or dogs more
-
-
     // Return
     const items = await queryBuilder.getMany();
+
+    // Needs to be after TypeORM query
+    items.filter(item => calculateDistance(item.user.lat, item.user.lon, user.lat, user.lon) <= distance);
 
     res.status(200).json(items);
     return;

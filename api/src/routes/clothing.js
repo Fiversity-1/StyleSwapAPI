@@ -67,7 +67,7 @@ function getClothing(req, res) {
         var _a;
         const { userId } = req.params;
         let amount = (_a = req.query.amount) !== null && _a !== void 0 ? _a : 20;
-        let { colour, size, condition, gender, style, type, distance, search } = req.body;
+        let { colour, size, condition, gender, style, type, distance, search, lat, lon } = req.body;
         // Get the user and make sure they are legit
         const userRepository = (0, db_1.getConnection)().getRepository(User_1.User);
         const user = yield userRepository.findOne({ where: { userId } });
@@ -78,8 +78,6 @@ function getClothing(req, res) {
         // Get the previous liked and disliked items from that user so we can't give dups
         const liked = user.liked;
         const disliked = user.liked;
-        // Get the location of the user so we can make sure the clothes are close
-        let loc = (0, helpful_helpers_1.decrypt)(user.location);
         const clothingRepository = (0, db_1.getConnection)().getRepository(Clothing_1.Clothing);
         if (search) {
             const extracted = (0, helpful_helpers_1.operationExtraction)(search);
@@ -123,6 +121,8 @@ function getClothing(req, res) {
         }
         // Make a dynamic query builder
         const queryBuilder = clothingRepository.createQueryBuilder('item');
+        queryBuilder.leftJoinAndSelect("clothing.user", "user");
+        queryBuilder.select(["clothing.clothingId", "user.lat", "user.long"]);
         if (colour) {
             queryBuilder.andWhere('ARRAY[:...colour]::text[] && item.colour::text[]', { colour });
         }
@@ -150,12 +150,10 @@ function getClothing(req, res) {
         queryBuilder.andWhere('item.userId != :userId', { userId });
         // Max amount items returned
         queryBuilder.limit(Number(amount));
-        // Need to make sure location is close
-        // TODO this will depend on:
-        // 1) How we store location, is it a coords or suburb or what
-        // 2) If we like cats or dogs more
         // Return
         const items = yield queryBuilder.getMany();
+        // Needs to be after TypeORM query
+        items.filter(item => (0, helpful_helpers_1.calculateDistance)(item.user.lat, item.user.lon, user.lat, user.lon) <= distance);
         res.status(200).json(items);
         return;
     });

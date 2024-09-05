@@ -17,9 +17,10 @@ function postUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log("New User Added!");
         const { userId } = req.params;
-        let { loc } = req.body;
-        if (!loc) {
-            loc = "help";
+        let { lat, lon } = req.body;
+        if (!lat || !lon) {
+            res.status(400).json('Missing location, send the addy');
+            return;
         }
         if (!userId) {
             res.status(400).json('Missing userId');
@@ -28,8 +29,8 @@ function postUser(req, res) {
         }
         const userRepository = (0, db_1.getConnection)().getRepository(User_1.User);
         const newUser = new User_1.User();
-        const encryptedLocation = (0, helpful_helpers_1.encrypt)(loc);
-        newUser.location = encryptedLocation;
+        newUser.lat = (0, helpful_helpers_1.encrypt)(lat);
+        newUser.lon = (0, helpful_helpers_1.encrypt)(lon);
         newUser.userId = userId;
         newUser.picture = "help";
         // Add picture logic

@@ -29,6 +29,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.encrypt = encrypt;
 exports.decrypt = decrypt;
 exports.operationExtraction = operationExtraction;
+exports.calculateDistance = calculateDistance;
 const crypto_1 = __importDefault(require("crypto"));
 const dotenv = __importStar(require("dotenv"));
 const enums_1 = require("../enums");
@@ -75,6 +76,32 @@ function operationExtraction(text) {
         condition: handleEmptyArray(conditionMatch),
         colour: handleEmptyArray(colourMatch)
     };
+}
+function calculateDistance(lat1, lon1, lat2, lon2) {
+    lat1 = decrypt(lat1);
+    lat2 = decrypt(lat2);
+    lon1 = decrypt(lon1);
+    lon2 = decrypt(lon2);
+    let lat1I = parseInt(lat1);
+    let lat2I = parseInt(lat2);
+    let lon1I = parseInt(lon1);
+    let lon2I = parseInt(lon2);
+    return haversineDistance(lat1I, lon1I, lat2I, lon2I);
+}
+// ChatGPT generated the below functions
+function toRadians(degrees) {
+    return degrees * (Math.PI / 180);
+}
+function haversineDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Radius of the Earth in kilometers
+    const dLat = toRadians(lat2 - lat1);
+    const dLon = toRadians(lon2 - lon1);
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c; // Distance in kilometers
+    return distance;
 }
 function handleEmptyArray(array) {
     if (array.length === 0) {
