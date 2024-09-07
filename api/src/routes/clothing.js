@@ -65,7 +65,7 @@ function getClothing(req, res) {
         var _a;
         const { userId } = req.params;
         let amount = (_a = req.query.amount) !== null && _a !== void 0 ? _a : 20;
-        let { colour, size, condition, gender, style, type, distance, search, lat, lon } = req.body;
+        let { colour, size, condition, gender, style, type, distance, search } = req.body;
         // Get the user and make sure they are legit
         const userRepository = (0, db_1.getConnection)().getRepository(User_1.User);
         const user = yield userRepository.findOne({ where: { userId } });
@@ -76,6 +76,8 @@ function getClothing(req, res) {
         // Get the previous liked and disliked items from that user so we can't give dups
         const liked = user.liked;
         const disliked = user.liked;
+        const lat = user.lat;
+        const lon = user.lon;
         const clothingRepository = (0, db_1.getConnection)().getRepository(Clothing_1.Clothing);
         if (search) {
             const extracted = (0, helpful_helpers_1.operationExtraction)(search);

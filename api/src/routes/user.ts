@@ -18,7 +18,7 @@ export async function postUser(req: Request<UserRouteParams, any, UserBodyParams
 
     const { userId } = req.params;
 
-    let { lat, lon } = req.body;
+    let { lat, lon, bio } = req.body;
 
     if (!lat || !lon) {
         res.status(400).json('Missing location, send the addy');
@@ -40,6 +40,7 @@ export async function postUser(req: Request<UserRouteParams, any, UserBodyParams
 
     newUser.userId = userId;
     newUser.picture = "help";
+    newUser.bio = bio;
 
     // Add picture logic
 

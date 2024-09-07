@@ -7,8 +7,9 @@ export type UserRouteParams = {
 };
 
 export type UserBodyParams = {
-    lon: string
-    lat: string
+    lon: string,
+    lat: string,
+    bio: string
 };
 
 export type ClothingRouteParams = {
@@ -24,9 +25,7 @@ export type ClothingGetBodyParams = {
     style: Style[],
     type: Type[],
     distance: number,
-    search: string,
-    lat: string,
-    lon: string
+    search: string
 };
 
 export type ClothingBodyParams = {

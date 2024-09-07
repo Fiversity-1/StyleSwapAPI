@@ -11,6 +11,9 @@ export class User {
     @Column({ nullable: false })
     lon: string;
 
+    @Column()
+    bio: string;
+
     @Column({ nullable: false })
     picture: string;
 

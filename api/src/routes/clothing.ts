@@ -86,9 +86,7 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
         style,
         type,
         distance,
-        search,
-        lat,
-        lon
+        search
     } = req.body;
 
     // Get the user and make sure they are legit
@@ -103,6 +101,9 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
     // Get the previous liked and disliked items from that user so we can't give dups
     const liked = user.liked;
     const disliked = user.liked;
+
+    const lat = user.lat;
+    const lon = user.lon;
 
     const clothingRepository = getConnection().getRepository(ClothingDb);
 

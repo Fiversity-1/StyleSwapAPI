@@ -27,6 +27,10 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "lon", void 0);
 __decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], User.prototype, "bio", void 0);
+__decorate([
     (0, typeorm_1.Column)({ nullable: false }),
     __metadata("design:type", String)
 ], User.prototype, "picture", void 0);
