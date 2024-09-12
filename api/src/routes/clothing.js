@@ -58,7 +58,8 @@ function postClothing(req, res) {
  *
  *  ~ Function used in {{url}}/api/clothes/search/:userID
  *
- *  Should return information so that the front end can display clothes (pretty much just the entire database entry for each item).
+ *  Should return information so that the front end can display clothes
+ *  (pretty much just the entire database entry for each item).
  */
 function getClothing(req, res) {
     return __awaiter(this, void 0, void 0, function* () {

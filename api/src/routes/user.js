@@ -11,6 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postUser = postUser;
 exports.swipe = swipe;
+exports.block = block;
+exports.unmatch_handles = unmatch_handles;
 const db_1 = require("../db");
 const User_1 = require("../db/User");
 const Clothing_1 = require("../db/Clothing");
@@ -81,6 +83,7 @@ function swipe(req, res) {
         else {
             user.disliked.push(clotheId);
             res.status(200).json('Clothing Item Disliked');
+            return;
         }
         // Only liked clothes from here on
         // Has user 2 already liked something from user 1
@@ -89,6 +92,61 @@ function swipe(req, res) {
         // Is one of their id's within user.liked?
         let matches = userClothes.filter(clothe => user2.liked.includes(clothe.clothingId));
         // Return the clothes
+        if (!matches) {
+            res.status(200).json("Liked but no matches");
+            return;
+        }
         res.status(200).json(matches);
+    });
+}
+function block(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        // User 1 is blocking User 2
+        const { userId1, userId2 } = req.params;
+        // Make sure the users are legit
+        const userRepository = (0, db_1.getConnection)().getRepository(User_1.User);
+        const user1 = yield userRepository.findOne({ where: { userId: userId1 } });
+        const user2 = yield userRepository.findOne({ where: { userId: userId2 } });
+        if (!user2 || !user1) {
+            res.status(404).json("User not found");
+            return;
+        }
+        // Remove them from the matched array from each other, good is 201 anything else is bad 
+        const eno = yield unmatch(userId1, userId2);
+        if (eno !== 201) {
+            res.status(eno).json("Error occured when unmatching the users");
+        }
+        // Add them to the block array, only user1 is blocking user2
+        // As such it is a one way block type shit
+        user1.blocked.push(userId2);
+        yield userRepository.save(user1);
+        res.status(200).json("Get Blocked Nerd!");
+    });
+}
+function unmatch_handles(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const { userId1, userId2 } = req.params;
+        const eno = yield unmatch(userId1, userId2);
+        if (eno !== 201) {
+            res.status(eno).json("There was an error unmatching");
+            return;
+        }
+        res.status(eno).json("Unmatched successful");
+    });
+}
+function unmatch(userId1, userId2) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const userRepo = (0, db_1.getConnection)().getRepository(User_1.User);
+        const user1 = yield userRepo.findOne({ where: { userId: userId1 } });
+        const user2 = yield userRepo.findOne({ where: { userId: userId2 } });
+        if (!user2 || !user1) {
+            return 404;
+        }
+        // Remove the userId of one user from the matched array in the other user
+        user1.matched = user1.matched.filter(id => id !== userId2);
+        user2.matched = user2.matched.filter(id => id !== userId1);
+        yield userRepo.save(user1);
+        yield userRepo.save(user2);
+        return 201;
     });
 }

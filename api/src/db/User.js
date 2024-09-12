@@ -50,6 +50,14 @@ __decorate([
     }),
     __metadata("design:type", Array)
 ], User.prototype, "matched", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        nullable: false,
+        default: [],
+        type: "simple-array"
+    }),
+    __metadata("design:type", Array)
+], User.prototype, "blocked", void 0);
 exports.User = User = __decorate([
     (0, typeorm_1.Entity)()
 ], User);

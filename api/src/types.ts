@@ -6,6 +6,11 @@ export type UserRouteParams = {
     userId: string
 };
 
+export type BlockRouteParams = {
+    userId1: string
+    userId2: string
+};
+
 export type UserBodyParams = {
     lon: string,
     lat: string,

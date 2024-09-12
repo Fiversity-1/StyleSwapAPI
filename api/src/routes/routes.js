@@ -13,6 +13,8 @@ exports.router.get('/health', health_1.dripCheck);
 exports.router.get('/clothes/:userId', clothing_1.getUserClothing);
 // Gets all the clothes in the database from a specific user
 exports.router.get('/clothes/liked/:userId', clothing_1.getLikedClothing);
+exports.router.get('/user/block/:userId1/:userId2', user_1.block);
+exports.router.get('/user/unmatch/:userId1/:userId2', user_1.unmatch_handles);
 // Likes a piece of clothing
 exports.router.get('/clothes/like/:userId/:clotheId', user_1.swipe);
 ///// DELETE

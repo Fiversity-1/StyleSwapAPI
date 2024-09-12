@@ -18,6 +18,8 @@ import {
     calculateDistance
 } from './helpful_helpers';
 
+import ImageService from '../image';
+
 export async function postClothing(req: Request<UserRouteParams, any, ClothingBodyParams>, res: Response) {
     const { userId } = req.params;
     const {
@@ -72,7 +74,8 @@ export async function postClothing(req: Request<UserRouteParams, any, ClothingBo
  *
  *  ~ Function used in {{url}}/api/clothes/search/:userID
  *
- *  Should return information so that the front end can display clothes (pretty much just the entire database entry for each item).
+ *  Should return information so that the front end can display clothes
+ *  (pretty much just the entire database entry for each item).
  */
 export async function getClothing(req:Request<UserRouteParams, any, ClothingGetBodyParams>, res: Response) {
     const { userId } = req.params;

@@ -31,4 +31,11 @@ export class User {
         type: "simple-array"
     })
     matched: string[];
+    
+    @Column({
+        nullable: false,
+        default: [],
+        type: "simple-array"
+    })
+    blocked: string[];
 }

@@ -13,7 +13,9 @@ import {
 
 import {
     postUser,
-    swipe
+    swipe,
+    block,
+    unmatch_handles
 } from './user';
 
 export const router = Router();
@@ -28,6 +30,10 @@ router.get('/clothes/:userId', getUserClothing);
 
 // Gets all the clothes in the database from a specific user
 router.get('/clothes/liked/:userId', getLikedClothing);
+
+router.get('/user/block/:userId1/:userId2', block);
+
+router.get('/user/unmatch/:userId1/:userId2', unmatch_handles);
 
 // Likes a piece of clothing
 router.get('/clothes/like/:userId/:clotheId', swipe);

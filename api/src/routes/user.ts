@@ -8,7 +8,8 @@ import {
     UserBodyParams,
     UserRouteParams,
     SwipeRouteParams,
-    SwipeQueryParams
+    SwipeQueryParams,
+    BlockRouteParams
 } from '../types';
 
 import { encrypt } from './helpful_helpers';
@@ -102,6 +103,7 @@ export async function swipe(req: Request<SwipeRouteParams, any, any, SwipeQueryP
     } else {
 	user.disliked.push(clotheId);
     	res.status(200).json('Clothing Item Disliked');
+	return;
     }
 
     // Only liked clothes from here on
@@ -114,5 +116,72 @@ export async function swipe(req: Request<SwipeRouteParams, any, any, SwipeQueryP
     let matches = userClothes.filter(clothe => user2.liked.includes(clothe.clothingId));
 
     // Return the clothes
+    if (!matches) {
+	    res.status(200).json("Liked but no matches");
+	    return;
+    }
     res.status(200).json(matches);
+}
+
+export async function block(req: Request<BlockRouteParams>, res: Response) {
+	// User 1 is blocking User 2
+	const { userId1, userId2 } = req.params;
+
+	// Make sure the users are legit
+
+	const userRepository = getConnection().getRepository(UserDb);
+	
+	const user1 = await userRepository.findOne({ where: { userId: userId1 } });
+	const user2 = await userRepository.findOne({ where: { userId: userId2 } });
+
+	if (!user2 || !user1) {
+		res.status(404).json("User not found");
+		return;
+	}
+
+	// Remove them from the matched array from each other, good is 201 anything else is bad 
+	const eno = await unmatch(userId1, userId2);
+	if (eno !== 201) {
+		res.status(eno).json("Error occured when unmatching the users");	
+	}
+
+	// Add them to the block array, only user1 is blocking user2
+	// As such it is a one way block type shit
+	user1.blocked.push(userId2);
+
+	await userRepository.save(user1);
+
+	res.status(200).json("Get Blocked Nerd!");
+}
+
+export async function unmatch_handles(req: Request<BlockRouteParams>, res: Response) {
+	const { userId1, userId2 } = req.params;
+
+	const eno = await unmatch(userId1, userId2);
+
+	if (eno !== 201) {
+		res.status(eno).json("There was an error unmatching");
+		return;
+	}
+
+	res.status(eno).json("Unmatched successful");
+}
+
+async function unmatch(userId1: string, userId2: string): Promise<number> {
+	const userRepo = getConnection().getRepository(UserDb);
+
+	const user1 = await userRepo.findOne({ where: { userId: userId1 } });
+	const user2 = await userRepo.findOne({ where: { userId: userId2 } });
+
+	if (!user2 || !user1) {
+		return 404;
+	}
+
+	// Remove the userId of one user from the matched array in the other user
+	user1.matched = user1.matched.filter(id => id !== userId2);
+	user2.matched = user2.matched.filter(id => id !== userId1);
+
+	await userRepo.save(user1);
+	await userRepo.save(user2);
+	return 201;
 }

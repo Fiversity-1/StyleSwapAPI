@@ -2,6 +2,8 @@ import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 't
 
 import { User } from './User';
 
+import { Image } from './Image';
+
 import {
     Gender,
     Size,
@@ -78,4 +80,13 @@ export class Clothing {
     })
     type: Type
 
+//    @ManyToOne(() => Image, { nullable: false })
+//    @JoinColumn({
+//        name: 'id',
+//        referencedColumnName: 'id',
+//    })
+//    image: Image;
+//
+//    @Column()
+//    id: Image['id'];
 }
