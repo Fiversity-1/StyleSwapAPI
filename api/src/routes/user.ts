@@ -218,7 +218,7 @@ export async function block(req: Request<BlockRouteParams>, res: Response) {
 	// Make sure the users are legit
 
 	const userRepository = getConnection().getRepository(UserDb);
-	
+
 	const user1 = await userRepository.findOne({ where: { userId: userId1 } });
 	const user2 = await userRepository.findOne({ where: { userId: userId2 } });
 
@@ -227,10 +227,10 @@ export async function block(req: Request<BlockRouteParams>, res: Response) {
 		return;
 	}
 
-	// Remove them from the matched array from each other, good is 201 anything else is bad 
+	// Remove them from the matched array from each other, good is 201 anything else is bad
 	const eno = await unmatch(userId1, userId2);
 	if (eno !== 201) {
-		res.status(eno).json("Error occured when unmatching the users");	
+		res.status(eno).json("Error occured when unmatching the users");
 	}
 
 	// Add them to the block array, only user1 is blocking user2

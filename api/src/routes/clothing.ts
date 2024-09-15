@@ -16,7 +16,9 @@ StyleSwapAPI
 
 src/routes/clothing.ts
 
+Defines all of the clothing related functions that are used for routes
 
+There are some helper functions used here, those are defined within ./helpful_helpers
 
 */
 
@@ -42,6 +44,26 @@ import {
 
 import ImageService from '../image';
 
+/*
+
+postClothing
+========
+Inputs:
+req: Request<UserRouteParams, any, ClothingBodyParams>
+res: Response
+
+Second type in Request is never used, so any is fine. UserRouteParams and ClothingBodyParams is defined in ../types.ts
+
+Outputs:
+void
+
+Response is handled by the input res
+
+Purpose:
+
+Creates a new clothing piece in the database given the params
+
+*/
 export async function postClothing(req: Request<UserRouteParams, any, ClothingBodyParams>, res: Response) {
     const { userId } = req.params;
     const {
@@ -52,8 +74,9 @@ export async function postClothing(req: Request<UserRouteParams, any, ClothingBo
         style,
         bio,
         type
-    } = req.body;
+    } = req.body; // The inputs / tags / information about the clothing piece to add
 
+    // Basic error checking to make sure needed information is here
     if (!userId) {
         res.status(400).json('Missing userId');
         return;
@@ -74,6 +97,7 @@ export async function postClothing(req: Request<UserRouteParams, any, ClothingBo
 
     const clothingRepository = getConnection().getRepository(ClothingDb);
 
+    // Makes a new clothing item and puts the information in it.
     const newItem = new ClothingDb();
 
     newItem.size = size;
@@ -91,14 +115,25 @@ export async function postClothing(req: Request<UserRouteParams, any, ClothingBo
 }
 
 /*
- * getClothing
- * ===========
- *
- *  ~ Function used in {{url}}/api/clothes/search/:userID
- *
- *  Should return information so that the front end can display clothes
- *  (pretty much just the entire database entry for each item).
- */
+
+getClothing
+========
+Inputs:
+req: Request<UserRouteParams, any, ClothingGetBodyParams>
+res: Response
+
+Second type in Request is never used, so any is fine. UserRouteParams and ClothingGetBodyParams is defined in ../types.ts
+
+Outputs:
+void
+
+Response is handled by the input res
+
+Purpose:
+
+Retrieves all clothing items given a set of filters
+
+*/
 export async function getClothing(req:Request<UserRouteParams, any, ClothingGetBodyParams>, res: Response) {
     const { userId } = req.params;
     let amount = req.query.amount ?? 20;
@@ -112,7 +147,7 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
         type,
         distance,
         search
-    } = req.body;
+    } = req.body; // The filters that will limit the search
 
     // Get the user and make sure they are legit
     const userRepository = getConnection().getRepository(UserDb);
@@ -132,11 +167,13 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
 
     const clothingRepository = getConnection().getRepository(ClothingDb);
 
+    // TODO: Meow
+    // This maybe no longer needed
+    // Adds onto the arrays passed in or makes a new array to further limit the search based on the text input
     if (search) {
         const extracted = operationExtraction(search);
 
-        // Add onto each of the arrays
-
+        // Add onto each of the arrays or make a new
         if (extracted.size) {
             if (!size) {
                 size = [];
@@ -186,6 +223,7 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
     queryBuilder.leftJoinAndSelect("clothing.user", "user");
     queryBuilder.select(["clothing.clothingId", "user.lat", "user.long"]);
 
+    // If the search should be limited by this, enter the if statement and add on to the query
     if (colour) {
         queryBuilder.andWhere('ARRAY[:...colour]::text[] && item.colour::text[]', { colour });
     }
@@ -234,7 +272,25 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
     return;
 }
 
-export async function getUserClothing(req:Request<UserRouteParams, any, any>, res: Response) {
+/*
+
+getUserClothing
+========
+Inputs:
+req: Request<UserRouteParams>
+res: Response
+
+Outputs:
+void
+
+Response is handled by the input res
+
+Purpose:
+
+Retrieves all clothing items from a user
+
+*/
+export async function getUserClothing(req:Request<UserRouteParams>, res: Response) {
     const { userId } = req.params;
 
     const userRepository = getConnection().getRepository(UserDb);
@@ -251,7 +307,25 @@ export async function getUserClothing(req:Request<UserRouteParams, any, any>, re
     res.status(200).json(items);
 }
 
-export async function deleteClothing(req:Request<ClothingRouteParams, any, any>, res: Response) {
+/*
+
+deleteClothing
+========
+Inputs:
+req: Request<ClothingRouteParams>
+res: Response
+
+Outputs:
+void
+
+Response is handled by the input res
+
+Purpose:
+
+Deletes a clothing item
+
+*/
+export async function deleteClothing(req:Request<ClothingRouteParams>, res: Response) {
     const { userId, clothingId } = req.params;
 
     const userRepository = getConnection().getRepository(UserDb);
@@ -270,6 +344,7 @@ export async function deleteClothing(req:Request<ClothingRouteParams, any, any>,
         return;
     }
 
+    // Users should not be allowed to delete items that are not their own
     if (item.userId !== userId) {
         res.status(403).json("Not allowed to delete this item");
         return;
@@ -280,7 +355,25 @@ export async function deleteClothing(req:Request<ClothingRouteParams, any, any>,
     res.status(200).json("Item deleted");
 }
 
-export async function getLikedClothing(req:Request<UserRouteParams, any, any>, res: Response) {
+/*
+
+getLikedClothing
+========
+Inputs:
+req: Request<UserRouteParams>
+res: Response
+
+Outputs:
+void
+
+Response is handled by the input res
+
+Purpose:
+
+Retrieves all clothing items that a user has liked
+
+*/
+export async function getLikedClothing(req:Request<UserRouteParams>, res: Response) {
     const { userId } = req.params;
 
     const userRepository = getConnection().getRepository(UserDb);
@@ -297,7 +390,24 @@ export async function getLikedClothing(req:Request<UserRouteParams, any, any>, r
     res.status(200).json(items);
 }
 
+/*
 
+patchClothing
+========
+Inputs:
+req: Request<ClothingRouteParams, any, ClothingBodyParams>
+res: Response
+
+Outputs:
+void
+
+Response is handled by the input res
+
+Purpose:
+
+Edits a clothing item's tags / images TODO: images
+
+*/
 export async function patchClothing(req:Request<ClothingRouteParams, any, ClothingBodyParams>, res: Response) {
     const { userId, clothingId } = req.params;
     const {
@@ -367,5 +477,4 @@ export async function patchClothing(req:Request<ClothingRouteParams, any, Clothi
 
     res.status(200).json('Item updated');
     return;
-
 }
