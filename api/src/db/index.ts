@@ -56,7 +56,7 @@ BackendDataSource.initialize()
         console.log('Connected to the database');
     })
     .catch((err) => {
-        console.err(err);
+        console.log(err);
     });
 
 export const getConnection = () => BackendDataSource;

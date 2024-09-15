@@ -10,14 +10,38 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Clothing = void 0;
+/*
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡶⢶⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠀⣠⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⠼⠧⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣼⠇⠀⠀⠸⣧⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⣀⣴⠞⠋⢀⣠⡴⢦⣄⡀⠙⠳⣦⣀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⢀⣠⡴⠟⠉⣀⣤⠾⠛⠁⠀⠀⠈⠛⠷⣦⣀⠉⠻⢦⣄⡀⠀⠀⠀
+⢀⣤⠶⠛⣁⣤⠶⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠶⣤⣈⠛⠶⣤⡀
+⠸⣧⣶⣿⣯⣤⣴⠶⠶⣦⣤⣤⣤⣤⣤⣤⣤⣤⣴⠶⠶⣦⣤⣽⣿⣶⣼⠇
+⠀⠀⠀⠀⠀⠀⠻⠶⠶⠟⠀⠀⠀⠀⠀⠀⠀⠀⠻⠶⠶⠟⠀⠀⠀⠀⠀⠀
+
+
+StyleSwapAPI
+------------
+
+src/db/User.ts
+
+Defines the Clothing table within the database.
+
+*/
 const typeorm_1 = require("typeorm");
+// Since there is references to other tables
 const User_1 = require("./User");
+// Enums that are used to limit acceptable values within the database
 const enums_1 = require("../enums");
 let Clothing = class Clothing {
 };
 exports.Clothing = Clothing;
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    (0, typeorm_1.PrimaryGeneratedColumn)()
+    // auto generated coloumn, i.e. 1 ... infinite
+    ,
     __metadata("design:type", Number)
 ], Clothing.prototype, "clothingId", void 0);
 __decorate([
@@ -25,19 +49,28 @@ __decorate([
     (0, typeorm_1.JoinColumn)({
         name: 'userId',
         referencedColumnName: 'userId',
-    }),
+    })
+    // A reference to the user who posted this item
+    ,
     __metadata("design:type", User_1.User)
 ], Clothing.prototype, "user", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)()
+    // The user's id
+    ,
     __metadata("design:type", Object)
 ], Clothing.prototype, "userId", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
+    (0, typeorm_1.Column)({ nullable: true })
+    // TODO: Meow
+    // This is no longer needed, image is currently stored at the bottom
+    ,
     __metadata("design:type", String)
 ], Clothing.prototype, "picture", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: false }),
+    (0, typeorm_1.Column)({ nullable: false })
+    // The bio / description of the clothing piece
+    ,
     __metadata("design:type", String)
 ], Clothing.prototype, "bio", void 0);
 __decorate([

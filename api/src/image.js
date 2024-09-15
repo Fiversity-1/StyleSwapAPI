@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = require("./db/index");
 const Image_1 = require("./db/Image"); // Import your Image entity
 class ImageService {
+    // Uploads a new image to the database
     uploadImage(file) {
         return __awaiter(this, void 0, void 0, function* () {
             const imageRepository = (0, index_1.getConnection)().getRepository(Image_1.Image);
@@ -20,6 +21,7 @@ class ImageService {
             return yield imageRepository.save(newImage); // Save the image entity and return it (inc the id)
         });
     }
+    // Gets an image based on the id
     getImageById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const imageRepository = (0, index_1.getConnection)().getRepository(Image_1.Image);
@@ -27,4 +29,5 @@ class ImageService {
         });
     }
 }
+// Allows the image service to be accessable (and it's functions) outside of this file
 exports.default = new ImageService();

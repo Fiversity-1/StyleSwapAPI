@@ -1,4 +1,33 @@
 "use strict";
+/*
+
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡶⢶⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠀⣠⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⠼⠧⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣼⠇⠀⠀⠸⣧⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⣀⣴⠞⠋⢀⣠⡴⢦⣄⡀⠙⠳⣦⣀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⢀⣠⡴⠟⠉⣀⣤⠾⠛⠁⠀⠀⠈⠛⠷⣦⣀⠉⠻⢦⣄⡀⠀⠀⠀
+⢀⣤⠶⠛⣁⣤⠶⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠶⣤⣈⠛⠶⣤⡀
+⠸⣧⣶⣿⣯⣤⣴⠶⠶⣦⣤⣤⣤⣤⣤⣤⣤⣤⣴⠶⠶⣦⣤⣽⣿⣶⣼⠇
+⠀⠀⠀⠀⠀⠀⠻⠶⠶⠟⠀⠀⠀⠀⠀⠀⠀⠀⠻⠶⠶⠟⠀⠀⠀⠀⠀⠀
+
+
+StyleSwapAPI
+------------
+
+src/routes/user.ts
+
+The entire point of this file is to manage the user based routes for the API.
+
+It manages posting a user, swiping, blocking and unmatching other users.
+
+These function are all exported out to the based src/routes/routes.ts where they
+are set up with the router so that they can be used in the API.
+
+unmatch() here is not exported as it is used in block as well, as such is taken out
+and used in both unmatch_handles (with handles unmatching through the API) and block.
+
+*/
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -17,9 +46,28 @@ const db_1 = require("../db");
 const User_1 = require("../db/User");
 const Clothing_1 = require("../db/Clothing");
 const helpful_helpers_1 = require("./helpful_helpers");
+/*
+
+postUser
+========
+Inputs:
+req: Request<UserRouteParams, any, UserBodyParams>
+res: Response
+
+Second type in Request is never used, so any is fine. UserRouteParams and UserBodyParams is defined in ../types.ts
+
+Outputs:
+void
+
+Response is handled by the input res
+
+Purpose:
+
+Creates a new user in the database given the params, i.e. userId (gotten from firebase), lat, lon (location data) and their bio.
+
+*/
 function postUser(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log("New User Added!");
         const { userId } = req.params;
         let { lat, lon, bio } = req.body;
         if (!lat || !lon) {
@@ -43,12 +91,30 @@ function postUser(req, res) {
         res.status(201).json('Made a user');
     });
 }
+/*
+
+swipe
+========
+Inputs:
+req: Request<SwipeRouteParams, any, any, SwipeQueryParams>
+res: Response
+
+Second and third type in Request is never used, so any is fine. SwipeRouteParams and SwipeQueryParams is defined in ../types.ts
+
+Outputs:
+void
+
+Response is handled by the input res
+
+Purpose:
+
+Takes in a user, and the clothing item the swiped on, and which they did (like / dislike). From there adds them to the correct list, either liked, or dislike and if match, return the match.
+
+*/
 function swipe(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { userId, clotheId } = req.params;
         let { like } = req.query;
-        console.log(userId);
-        console.log(clotheId);
         if (!userId || !clotheId) {
             res.status(400).json('Missing userId or clotheId');
             return;
@@ -99,6 +165,29 @@ function swipe(req, res) {
         res.status(200).json(matches);
     });
 }
+/*
+
+block
+========
+Inputs:
+req: Request<BlockRouteParams>
+res: Response
+
+BlockRouteParams is defined in ../types.ts
+
+Outputs:
+void
+
+Response is handled by the input res
+
+Purpose:
+
+Takes in two userIds, user1 and user2, where user1 should block user2. First unmatch() is called to have these no longer matched, then user1, adds user2 to the blocked array.
+It is a one way block, i.e. user2 can still see user1, but user1 cannot see user2.
+
+This may need to change based on User feedback, but if it is still here, we were told this is what they expect.
+
+*/
 function block(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         // User 1 is blocking User 2
@@ -111,7 +200,7 @@ function block(req, res) {
             res.status(404).json("User not found");
             return;
         }
-        // Remove them from the matched array from each other, good is 201 anything else is bad 
+        // Remove them from the matched array from each other, good is 201 anything else is bad
         const eno = yield unmatch(userId1, userId2);
         if (eno !== 201) {
             res.status(eno).json("Error occured when unmatching the users");
@@ -123,6 +212,26 @@ function block(req, res) {
         res.status(200).json("Get Blocked Nerd!");
     });
 }
+/*
+
+unmatch_handles
+========
+Inputs:
+req: Request<BlockRouteParams>
+res: Response
+
+BlockRouteParams is defined in ../types.ts
+
+Outputs:
+void
+
+Response is handled by the input res
+
+Purpose:
+
+Is a wrapper so that there is less code dup, pretty much just calls unmatch().
+
+*/
 function unmatch_handles(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { userId1, userId2 } = req.params;
@@ -131,9 +240,27 @@ function unmatch_handles(req, res) {
             res.status(eno).json("There was an error unmatching");
             return;
         }
-        res.status(eno).json("Unmatched successful");
+        res.status(eno).json("Unmatched successfully");
     });
 }
+/*
+
+unmatch
+========
+Inputs:
+userId1: The first user's id
+userId2: The second user's id
+
+Outputs:
+number
+
+The code to return i.e. 404 if users were not found.
+
+Purpose:
+
+Removes the users from the others matched list, this is called both in unmatch_handles and block.
+
+*/
 function unmatch(userId1, userId2) {
     return __awaiter(this, void 0, void 0, function* () {
         const userRepo = (0, db_1.getConnection)().getRepository(User_1.User);

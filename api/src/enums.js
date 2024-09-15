@@ -1,6 +1,31 @@
 "use strict";
+/*
+
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡶⢶⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠀⣠⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⠼⠧⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣼⠇⠀⠀⠸⣧⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⣀⣴⠞⠋⢀⣠⡴⢦⣄⡀⠙⠳⣦⣀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⢀⣠⡴⠟⠉⣀⣤⠾⠛⠁⠀⠀⠈⠛⠷⣦⣀⠉⠻⢦⣄⡀⠀⠀⠀
+⢀⣤⠶⠛⣁⣤⠶⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠶⣤⣈⠛⠶⣤⡀
+⠸⣧⣶⣿⣯⣤⣴⠶⠶⣦⣤⣤⣤⣤⣤⣤⣤⣤⣴⠶⠶⣦⣤⣽⣿⣶⣼⠇
+⠀⠀⠀⠀⠀⠀⠻⠶⠶⠟⠀⠀⠀⠀⠀⠀⠀⠀⠻⠶⠶⠟⠀⠀⠀⠀⠀⠀
+
+
+StyleSwapAPI
+------------
+
+src/enums.ts
+
+Defines all of the enums used within any file beneath this, this is pretty much a rehash of the
+similar file within the frontend codebase, but due to diff repos it is needed here as well.
+
+Mainly just things for the database, i.e. the Colour enum shows all accepted Colours for the database.
+
+*/
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Style = exports.Type = exports.Condition = exports.Size = exports.Gender = exports.Colour = void 0;
+// Colours allowed in the database
 var Colour;
 (function (Colour) {
     Colour["RED"] = "red";
@@ -18,13 +43,14 @@ var Colour;
     Colour["GOLD"] = "gold";
     Colour["OTHER"] = "other";
 })(Colour || (exports.Colour = Colour = {}));
-// This code might get me cancelled
+// The 'gender' of the clothes
 var Gender;
 (function (Gender) {
     Gender["MALE"] = "male";
     Gender["FEMALE"] = "female";
     Gender["UNISEX"] = "unisex";
 })(Gender || (exports.Gender = Gender = {}));
+// Sizes
 var Size;
 (function (Size) {
     Size["XXS"] = "XXS";
@@ -38,6 +64,7 @@ var Size;
     Size["XXXXL"] = "XXXXL";
     Size["XXXXXL"] = "XXXXXL";
 })(Size || (exports.Size = Size = {}));
+// Condition of the clothes
 var Condition;
 (function (Condition) {
     Condition["NEW_TAG"] = "new_tag";
@@ -46,6 +73,7 @@ var Condition;
     Condition["GOOD"] = "good";
     Condition["FAIR"] = "fair";
 })(Condition || (exports.Condition = Condition = {}));
+// What is the clothing type?
 var Type;
 (function (Type) {
     Type["HAT"] = "hat";
@@ -61,6 +89,8 @@ var Type;
     Type["SHOES"] = "shoes";
     Type["JUMPER"] = "jumper";
 })(Type || (exports.Type = Type = {}));
+// TODO: See below
+// The Style of the clothes (not sure if this is no longer needed)
 var Style;
 (function (Style) {
     Style["CONTEMP"] = "contemporary";

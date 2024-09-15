@@ -10,24 +10,56 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
+/*
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡶⢶⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠀⣠⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⠼⠧⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣼⠇⠀⠀⠸⣧⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⣀⣴⠞⠋⢀⣠⡴⢦⣄⡀⠙⠳⣦⣀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⢀⣠⡴⠟⠉⣀⣤⠾⠛⠁⠀⠀⠈⠛⠷⣦⣀⠉⠻⢦⣄⡀⠀⠀⠀
+⢀⣤⠶⠛⣁⣤⠶⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠶⣤⣈⠛⠶⣤⡀
+⠸⣧⣶⣿⣯⣤⣴⠶⠶⣦⣤⣤⣤⣤⣤⣤⣤⣤⣴⠶⠶⣦⣤⣽⣿⣶⣼⠇
+⠀⠀⠀⠀⠀⠀⠻⠶⠶⠟⠀⠀⠀⠀⠀⠀⠀⠀⠻⠶⠶⠟⠀⠀⠀⠀⠀⠀
+
+
+StyleSwapAPI
+------------
+
+src/db/User.ts
+
+Creates the User table within the database, most information you expect to see here will not be here.
+
+It is mostly managed by Auth0 providers as it provides optimal security.
+
+However, location data is managed here though it is encrypted.
+
+*/
 const typeorm_1 = require("typeorm");
 let User = class User {
 };
 exports.User = User;
 __decorate([
-    (0, typeorm_1.PrimaryColumn)(),
+    (0, typeorm_1.PrimaryColumn)()
+    // Primary Key, retrieved from Auth0.
+    ,
     __metadata("design:type", String)
 ], User.prototype, "userId", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: false }),
+    (0, typeorm_1.Column)({ nullable: false })
+    // The user's lat, encrypted
+    ,
     __metadata("design:type", String)
 ], User.prototype, "lat", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: false }),
+    (0, typeorm_1.Column)({ nullable: false })
+    // The user's lon, encrypted
+    ,
     __metadata("design:type", String)
 ], User.prototype, "lon", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
+    (0, typeorm_1.Column)()
+    // The user's bio
+    ,
     __metadata("design:type", String)
 ], User.prototype, "bio", void 0);
 __decorate([
@@ -35,11 +67,17 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "picture", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'int', array: true, default: [0] }),
+    (0, typeorm_1.Column)({ type: 'int', array: true, default: [0] })
+    // An array of the clothing ids this user has liked
+    // Default is set with 0 so that there is less logic later, clothing ids start at 1 so this is not an issue
+    ,
     __metadata("design:type", Array)
 ], User.prototype, "liked", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'int', array: true, default: [0] }),
+    (0, typeorm_1.Column)({ type: 'int', array: true, default: [0] })
+    // An array of the clothing ids this user has disliked
+    // Default is set with 0 so that there is less logic later, clothing ids start at 1 so this is not an issue
+    ,
     __metadata("design:type", Array)
 ], User.prototype, "disliked", void 0);
 __decorate([
@@ -47,7 +85,9 @@ __decorate([
         nullable: false,
         default: [],
         type: "simple-array"
-    }),
+    })
+    // An array of the user ids this user has matched with
+    ,
     __metadata("design:type", Array)
 ], User.prototype, "matched", void 0);
 __decorate([
@@ -55,7 +95,9 @@ __decorate([
         nullable: false,
         default: [],
         type: "simple-array"
-    }),
+    })
+    // An array of the user ids this user has blocked
+    ,
     __metadata("design:type", Array)
 ], User.prototype, "blocked", void 0);
 exports.User = User = __decorate([

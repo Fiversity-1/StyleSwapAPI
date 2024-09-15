@@ -256,8 +256,12 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
         }),
     );
 
-    // Not the user's own clothes
+    // Not the user's own clothes        
     queryBuilder.andWhere('item.userId != :userId', { userId });
+
+    // And where the clothes' user has not been blocked by the user who is searching
+    const blocked = user.blocked;
+    queryBuilder.andWhere('item.userId IN (:...userId)', { blocked });
 
     // Max amount items returned
     queryBuilder.limit(Number(amount));

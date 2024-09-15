@@ -1,4 +1,27 @@
 "use strict";
+/*
+
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡶⢶⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠀⣠⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⠼⠧⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣼⠇⠀⠀⠸⣧⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⣀⣴⠞⠋⢀⣠⡴⢦⣄⡀⠙⠳⣦⣀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⢀⣠⡴⠟⠉⣀⣤⠾⠛⠁⠀⠀⠈⠛⠷⣦⣀⠉⠻⢦⣄⡀⠀⠀⠀
+⢀⣤⠶⠛⣁⣤⠶⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠶⣤⣈⠛⠶⣤⡀
+⠸⣧⣶⣿⣯⣤⣴⠶⠶⣦⣤⣤⣤⣤⣤⣤⣤⣤⣴⠶⠶⣦⣤⣽⣿⣶⣼⠇
+⠀⠀⠀⠀⠀⠀⠻⠶⠶⠟⠀⠀⠀⠀⠀⠀⠀⠀⠻⠶⠶⠟⠀⠀⠀⠀⠀⠀
+
+
+StyleSwapAPI
+------------
+
+src/routes/clothing.ts
+
+Defines all of the clothing related functions that are used for routes
+
+There are some helper functions used here, those are defined within ./helpful_helpers
+
+*/
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -20,10 +43,31 @@ const db_1 = require("../db");
 const Clothing_1 = require("../db/Clothing");
 const User_1 = require("../db/User");
 const helpful_helpers_1 = require("./helpful_helpers");
+/*
+
+postClothing
+========
+Inputs:
+req: Request<UserRouteParams, any, ClothingBodyParams>
+res: Response
+
+Second type in Request is never used, so any is fine. UserRouteParams and ClothingBodyParams is defined in ../types.ts
+
+Outputs:
+void
+
+Response is handled by the input res
+
+Purpose:
+
+Creates a new clothing piece in the database given the params
+
+*/
 function postClothing(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { userId } = req.params;
-        const { colour, size, condition, gender, style, bio, type } = req.body;
+        const { colour, size, condition, gender, style, bio, type } = req.body; // The inputs / tags / information about the clothing piece to add
+        // Basic error checking to make sure needed information is here
         if (!userId) {
             res.status(400).json('Missing userId');
             return;
@@ -39,6 +83,7 @@ function postClothing(req, res) {
             return;
         }
         const clothingRepository = (0, db_1.getConnection)().getRepository(Clothing_1.Clothing);
+        // Makes a new clothing item and puts the information in it.
         const newItem = new Clothing_1.Clothing();
         newItem.size = size;
         newItem.gender = gender;
@@ -53,20 +98,31 @@ function postClothing(req, res) {
     });
 }
 /*
- * getClothing
- * ===========
- *
- *  ~ Function used in {{url}}/api/clothes/search/:userID
- *
- *  Should return information so that the front end can display clothes
- *  (pretty much just the entire database entry for each item).
- */
+
+getClothing
+========
+Inputs:
+req: Request<UserRouteParams, any, ClothingGetBodyParams>
+res: Response
+
+Second type in Request is never used, so any is fine. UserRouteParams and ClothingGetBodyParams is defined in ../types.ts
+
+Outputs:
+void
+
+Response is handled by the input res
+
+Purpose:
+
+Retrieves all clothing items given a set of filters
+
+*/
 function getClothing(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         var _a;
         const { userId } = req.params;
         let amount = (_a = req.query.amount) !== null && _a !== void 0 ? _a : 20;
-        let { colour, size, condition, gender, style, type, distance, search } = req.body;
+        let { colour, size, condition, gender, style, type, distance, search } = req.body; // The filters that will limit the search
         // Get the user and make sure they are legit
         const userRepository = (0, db_1.getConnection)().getRepository(User_1.User);
         const user = yield userRepository.findOne({ where: { userId } });
@@ -80,9 +136,12 @@ function getClothing(req, res) {
         const lat = user.lat;
         const lon = user.lon;
         const clothingRepository = (0, db_1.getConnection)().getRepository(Clothing_1.Clothing);
+        // TODO: Meow
+        // This maybe no longer needed
+        // Adds onto the arrays passed in or makes a new array to further limit the search based on the text input
         if (search) {
             const extracted = (0, helpful_helpers_1.operationExtraction)(search);
-            // Add onto each of the arrays
+            // Add onto each of the arrays or make a new
             if (extracted.size) {
                 if (!size) {
                     size = [];
@@ -124,6 +183,7 @@ function getClothing(req, res) {
         const queryBuilder = clothingRepository.createQueryBuilder('item');
         queryBuilder.leftJoinAndSelect("clothing.user", "user");
         queryBuilder.select(["clothing.clothingId", "user.lat", "user.long"]);
+        // If the search should be limited by this, enter the if statement and add on to the query
         if (colour) {
             queryBuilder.andWhere('ARRAY[:...colour]::text[] && item.colour::text[]', { colour });
         }
@@ -147,8 +207,11 @@ function getClothing(req, res) {
             qb.where('item.clothingId IN (:...liked)', { liked })
                 .orWhere('item.clothingId IN (:...disliked)', { disliked });
         }));
-        // Not the user's own clothes
+        // Not the user's own clothes        
         queryBuilder.andWhere('item.userId != :userId', { userId });
+        // And where the clothes' user has not been blocked by the user who is searching
+        const blocked = user.blocked;
+        queryBuilder.andWhere('item.userId IN (:...userId)', { blocked });
         // Max amount items returned
         queryBuilder.limit(Number(amount));
         // Return
@@ -159,6 +222,24 @@ function getClothing(req, res) {
         return;
     });
 }
+/*
+
+getUserClothing
+========
+Inputs:
+req: Request<UserRouteParams>
+res: Response
+
+Outputs:
+void
+
+Response is handled by the input res
+
+Purpose:
+
+Retrieves all clothing items from a user
+
+*/
 function getUserClothing(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { userId } = req.params;
@@ -173,6 +254,24 @@ function getUserClothing(req, res) {
         res.status(200).json(items);
     });
 }
+/*
+
+deleteClothing
+========
+Inputs:
+req: Request<ClothingRouteParams>
+res: Response
+
+Outputs:
+void
+
+Response is handled by the input res
+
+Purpose:
+
+Deletes a clothing item
+
+*/
 function deleteClothing(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { userId, clothingId } = req.params;
@@ -188,6 +287,7 @@ function deleteClothing(req, res) {
             res.status(404).json("Item not found");
             return;
         }
+        // Users should not be allowed to delete items that are not their own
         if (item.userId !== userId) {
             res.status(403).json("Not allowed to delete this item");
             return;
@@ -196,6 +296,24 @@ function deleteClothing(req, res) {
         res.status(200).json("Item deleted");
     });
 }
+/*
+
+getLikedClothing
+========
+Inputs:
+req: Request<UserRouteParams>
+res: Response
+
+Outputs:
+void
+
+Response is handled by the input res
+
+Purpose:
+
+Retrieves all clothing items that a user has liked
+
+*/
 function getLikedClothing(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { userId } = req.params;
@@ -210,6 +328,24 @@ function getLikedClothing(req, res) {
         res.status(200).json(items);
     });
 }
+/*
+
+patchClothing
+========
+Inputs:
+req: Request<ClothingRouteParams, any, ClothingBodyParams>
+res: Response
+
+Outputs:
+void
+
+Response is handled by the input res
+
+Purpose:
+
+Edits a clothing item's tags / images TODO: images
+
+*/
 function patchClothing(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { userId, clothingId } = req.params;
