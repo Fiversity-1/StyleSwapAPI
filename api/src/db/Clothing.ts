@@ -1,9 +1,30 @@
+/*
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡶⢶⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠀⣠⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⠼⠧⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣼⠇⠀⠀⠸⣧⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⣀⣴⠞⠋⢀⣠⡴⢦⣄⡀⠙⠳⣦⣀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⢀⣠⡴⠟⠉⣀⣤⠾⠛⠁⠀⠀⠈⠛⠷⣦⣀⠉⠻⢦⣄⡀⠀⠀⠀
+⢀⣤⠶⠛⣁⣤⠶⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠶⣤⣈⠛⠶⣤⡀
+⠸⣧⣶⣿⣯⣤⣴⠶⠶⣦⣤⣤⣤⣤⣤⣤⣤⣤⣴⠶⠶⣦⣤⣽⣿⣶⣼⠇
+⠀⠀⠀⠀⠀⠀⠻⠶⠶⠟⠀⠀⠀⠀⠀⠀⠀⠀⠻⠶⠶⠟⠀⠀⠀⠀⠀⠀
+
+
+StyleSwapAPI
+------------
+
+src/db/User.ts
+
+Defines the Clothing table within the database.
+
+*/
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 
+// Since there is references to other tables
 import { User } from './User';
-
 import { Image } from './Image';
 
+// Enums that are used to limit acceptable values within the database
 import {
     Gender,
     Size,
@@ -13,6 +34,7 @@ import {
     Colour
 } from '../enums'
 
+// The size type since it is an union on Size and number
 import {
     SizeWithNumber
 } from '../types'
@@ -21,6 +43,7 @@ import {
 @Entity()
 export class Clothing {
     @PrimaryGeneratedColumn()
+    // auto generated coloumn, i.e. 1 ... infinite
     clothingId: number;
 
     @ManyToOne(() => User, { nullable: false })
@@ -28,19 +51,23 @@ export class Clothing {
         name: 'userId',
         referencedColumnName: 'userId',
     })
+    // A reference to the user who posted this item
     user: User;
 
     @Column()
+    // The user's id
     userId: User['userId'];
 
     @Column({ nullable: true })
+    // TODO: Meow
+    // This is no longer needed, image is currently stored at the bottom
     picture: string;
 
     @Column({ nullable: false })
+    // The bio / description of the clothing piece
     bio: string;
 
-    // Tags and allat
-
+    // Tags / Information on the clothing item it self
     @Column({
         type: 'enum',
         array: true,
@@ -80,13 +107,17 @@ export class Clothing {
     })
     type: Type
 
+    // TODO: Meow
+    // Needs to be 1) an array of images (probs with a max size) and 2) implemented within the routes
 //    @ManyToOne(() => Image, { nullable: false })
 //    @JoinColumn({
 //        name: 'id',
 //        referencedColumnName: 'id',
 //    })
+      // A reference to the image
 //    image: Image;
 //
 //    @Column()
+      // The image's id
 //    id: Image['id'];
 }
