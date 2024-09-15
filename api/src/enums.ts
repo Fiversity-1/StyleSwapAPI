@@ -1,3 +1,29 @@
+/*
+
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡶⢶⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠀⣠⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⠼⠧⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣼⠇⠀⠀⠸⣧⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⣀⣴⠞⠋⢀⣠⡴⢦⣄⡀⠙⠳⣦⣀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⢀⣠⡴⠟⠉⣀⣤⠾⠛⠁⠀⠀⠈⠛⠷⣦⣀⠉⠻⢦⣄⡀⠀⠀⠀
+⢀⣤⠶⠛⣁⣤⠶⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠶⣤⣈⠛⠶⣤⡀
+⠸⣧⣶⣿⣯⣤⣴⠶⠶⣦⣤⣤⣤⣤⣤⣤⣤⣤⣴⠶⠶⣦⣤⣽⣿⣶⣼⠇
+⠀⠀⠀⠀⠀⠀⠻⠶⠶⠟⠀⠀⠀⠀⠀⠀⠀⠀⠻⠶⠶⠟⠀⠀⠀⠀⠀⠀
+
+
+StyleSwapAPI
+------------
+
+src/enums.ts
+
+Defines all of the enums used within any file beneath this, this is pretty much a rehash of the
+similar file within the frontend codebase, but due to diff repos it is needed here as well.
+
+Mainly just things for the database, i.e. the Colour enum shows all accepted Colours for the database.
+
+*/
+
+// Colours allowed in the database
 export enum Colour {
     RED = 'red',
     ORANGE = 'orange',
@@ -15,13 +41,14 @@ export enum Colour {
     OTHER = 'other'
 }
 
-// This code might get me cancelled
+// The 'gender' of the clothes
 export enum Gender {
     MALE = 'male',
     FEMALE = 'female',
     UNISEX = 'unisex'
 }
 
+// Sizes
 export enum Size {
     XXS = 'XXS',
     XS = 'XS',
@@ -35,6 +62,7 @@ export enum Size {
     XXXXXL = 'XXXXXL'
 }
 
+// Condition of the clothes
 export enum Condition {
     NEW_TAG = 'new_tag',
     NEW = 'new',
@@ -43,6 +71,7 @@ export enum Condition {
     FAIR = 'fair'
 }
 
+// What is the clothing type?
 export enum Type {
     HAT = 'hat',
     SCARF = 'scarf',
@@ -58,6 +87,8 @@ export enum Type {
     JUMPER = 'jumper'
 }
 
+// TODO: See below
+// The Style of the clothes (not sure if this is no longer needed)
 export enum Style {
     CONTEMP = 'contemporary',
     S2000 = '2000s',
