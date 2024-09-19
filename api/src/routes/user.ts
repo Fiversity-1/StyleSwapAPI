@@ -82,6 +82,13 @@ export async function postUser(req: Request<UserRouteParams, any, UserBodyParams
 
     const userRepository = getConnection().getRepository(UserDb);
 
+    const user = await userRepository.findOne( { where: { userId } });
+
+    if (user) {
+	    res.status(400).json("User already in database");
+	    return;
+    }
+
     const newUser = new UserDb();
 
     newUser.lat = encrypt(lat);
@@ -96,6 +103,28 @@ export async function postUser(req: Request<UserRouteParams, any, UserBodyParams
     const savedUser = await userRepository.save(newUser);
 
     res.status(201).json('Made a user');
+}
+
+
+export async function getUser(req: Request<UserRouteParams>, res: Response) {
+    const { userId } = req.params;
+    
+    if (!userId) {
+        res.status(400).json('Missing userId');
+        console.warn("Missing userId when adding a user!");
+        return;
+    }
+
+    const userRepository = getConnection().getRepository(UserDb);
+
+    let user = await userRepository.findOne({ where: { userId} });
+
+    if (!user) {
+	res.status(404).json('No user found');
+	return;
+    }
+
+    res.status(200).json(user);
 }
 
 /*

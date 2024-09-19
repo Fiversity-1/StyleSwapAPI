@@ -220,8 +220,8 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
     // Make a dynamic query builder
     const queryBuilder = clothingRepository.createQueryBuilder('item');
 
-    queryBuilder.leftJoinAndSelect("clothing.user", "user");
-    queryBuilder.select(["clothing.clothingId", "user.lat", "user.long"]);
+    queryBuilder.leftJoinAndSelect("item.user", "user");
+    queryBuilder.select(["item.clothingId", "user.lat", "user.lon"]);
 
     // If the search should be limited by this, enter the if statement and add on to the query
     if (colour) {
@@ -261,7 +261,7 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
 
     // And where the clothes' user has not been blocked by the user who is searching
     const blocked = user.blocked;
-    queryBuilder.andWhere('item.userId IN (:...userId)', { blocked });
+    queryBuilder.andWhere('item.userId NOT IN (:...userId)', { blocked });
 
     // Max amount items returned
     queryBuilder.limit(Number(amount));
@@ -270,7 +270,7 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
     const items = await queryBuilder.getMany();
 
     // Needs to be after TypeORM query
-    items.filter(item => calculateDistance(item.user.lat, item.user.lon, user.lat, user.lon) <= distance);
+//    items.filter(item => calculateDistance(item.user.lat, item.user.lon, user.lat, user.lon) <= distance);
 
     res.status(200).json(items);
     return;

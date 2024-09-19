@@ -38,6 +38,7 @@ import {
 
 import {
     postUser, // adds a new user
+    getUser, // gets user information
     swipe, // swipes (likes/dislikes) a clothing item
     block, // blocks another user
     unmatch_handles // unmatches from another user
@@ -52,6 +53,8 @@ router.get('/health', dripCheck);
 
 // Gets all the clothes in the database from a specific user
 router.get('/clothes/:userId', getUserClothing);
+
+router.get('/user/:userId', getUser);
 
 // Gets all the clothes in the database from a specific user
 router.get('/clothes/liked/:userId', getLikedClothing);
