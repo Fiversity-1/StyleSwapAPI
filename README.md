@@ -15,7 +15,7 @@ Obviously if you want to add a completely new enum for the clothing, this will n
 code in there
 
 #### Running
-Warning This repository is not "batteries included". It does NOT include instructions to run a full Style Swap server, and we will not provide them. Please do not ask for help on this; you will be turned away. There are various sercutiry related environment variables in use that are obviously not supplied here and as such this will not work by just running the code.
+Warning This repository is not "batteries included". It does NOT include instructions to run a full Style Swap server, and we will not provide them. Please do not ask for help on this; you will be turned away. There are various security related environment variables in use that are obviously not supplied here and as such this will not work by just running the code.
 
 
 
