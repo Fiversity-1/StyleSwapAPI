@@ -15,15 +15,7 @@ Obviously if you want to add a completely new enum for the clothing, this will n
 code in there
 
 #### Running
-In order to run the code locally run ```./local.sh```
-
-To kill the docker containers run ```./kill.sh```
-NOTE THIS WILL KILL ALL DOCKER CONTAINERS RUNNING!!!
-
-To get new keys and save them in .env run ```./keys.sh```
-
-### Testing
-Most of the tests are run through Postman, this allowed for quick and easy testing of the back-end API without having to add outside code and functions (the more code you have / write the worse it gets)
+Warning This repository is not "batteries included". It does NOT include instructions to run a full Style Swap server, and we will not provide them. Please do not ask for help on this; you will be turned away. There are various sercutiry related environment variables in use that are obviously not supplied here and as such this will not work by just running the code.
 
 
 
