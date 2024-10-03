@@ -19,7 +19,7 @@ code in there
 #### Running
 Warning This repository is not "batteries included". It does NOT include instructions to run a full Style Swap server, and we will not provide them. Please do not ask for help on this; you will be turned away. There are various security related environment variables in use that are obviously not supplied here and as such this will not work by just running the code.
 
-# Clothing Swap API documentation (Might be bad quality as external tool was used to export it from postman, see original (here)[])
+# Clothing Swap API documentation (Might be bad quality as external tool was used to export it from postman, see original [here](https://documenter.getpostman.com/view/37269020/2sA3kaBdp1))
 
 Overrview of all API calls within the API.
 
