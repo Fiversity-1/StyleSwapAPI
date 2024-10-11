@@ -42,8 +42,6 @@ import {
     calculateDistance
 } from './helpful_helpers';
 
-import ImageService from '../image';
-
 /*
 
 postClothing
@@ -73,7 +71,8 @@ export async function postClothing(req: Request<UserRouteParams, any, ClothingBo
         gender,
         style,
         bio,
-        type
+        type,
+	images
     } = req.body; // The inputs / tags / information about the clothing piece to add
 
     // Basic error checking to make sure needed information is here
@@ -108,6 +107,7 @@ export async function postClothing(req: Request<UserRouteParams, any, ClothingBo
     newItem.type = type;
     newItem.bio = bio;
     newItem.userId = userId;
+    newItem.images = images;
 
     const savedItem = await clothingRepository.save(newItem)
 
@@ -221,7 +221,7 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
     const queryBuilder = clothingRepository.createQueryBuilder('item');
 
     queryBuilder.leftJoinAndSelect("item.user", "user");
-    queryBuilder.select(["item.clothingId", "user.lat", "user.lon"]);
+    queryBuilder.select(["item", "user.userId", "user.lat", "user.lon"]);
 
     // If the search should be limited by this, enter the if statement and add on to the query
     if (colour) {
@@ -267,10 +267,24 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
     queryBuilder.limit(Number(amount));
 
     // Return
-    const items = await queryBuilder.getMany();
+    let items = await queryBuilder.getMany();
 
-    // Needs to be after TypeORM query
-//    items.filter(item => calculateDistance(item.user.lat, item.user.lon, user.lat, user.lon) <= distance);
+    items = items
+	  .map(item => ({
+	    ...item,
+	    distance: calculateDistance(item.user.lat, item.user.lon, user.lat, user.lon),
+	  }))
+	  .filter(item => item.distance <= distance);
+
+    // Remove lat and lon from the user in the result set cause we dont want to return (even tho they are encrypted)
+    const sanitizedItems = items.map(item => {
+      if (item.user) {
+        // Remove the properties
+	item.user.lat = "";
+    	item.user.lon = "";
+      }
+      return item;
+    });
 
     res.status(200).json(items);
     return;

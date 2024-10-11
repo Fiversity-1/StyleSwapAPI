@@ -30,6 +30,9 @@ export class User {
     // Primary Key, retrieved from Auth0.
     userId: string;
 
+    @Column()
+    name: string;
+
     @Column({ nullable: false })
     // The user's lat, encrypted
     lat: string;
@@ -62,8 +65,8 @@ export class User {
         default: [],
         type: "simple-array"
     })
-    // An array of the user ids this user has matched with
-    matched: string[];
+    // An array of the clothing ids this user has matched with
+    matched: number[];
 
     @Column({
         nullable: false,

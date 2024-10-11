@@ -14,8 +14,8 @@ import {
 
 dotenv.config();
 
-const KEY = crypto.randomBytes(32);
-const IV = crypto.randomBytes(16);
+const KEY = Buffer.from(process.env.KEY || "ababababa" , 'hex');
+const IV = Buffer.from(process.env.IV || "ababababa", 'hex');
 const ALGO = 'aes-256-cbc';
 
 export function encrypt(text: string): string {

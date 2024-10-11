@@ -35,7 +35,9 @@ import { DataSource } from 'typeorm';
 
 import { User } from './User';
 import { Clothing } from './Clothing';
-import { Image } from './Image';
+import { Event } from './Event';
+import { Comment } from './Comment';
+import { UserComment } from './UserComment';
 
 // Makes a database with the following inputs
 const BackendDataSource = new DataSource({
@@ -47,7 +49,7 @@ const BackendDataSource = new DataSource({
     database: process.env.DB_DATABASE,
     synchronize: true,
     logging: false,
-    entities: [User, Clothing, Image],
+    entities: [User, Clothing, Event, Comment, UserComment],
 });
 
 // Logs if the database was successfully made for the journal

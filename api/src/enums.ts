@@ -64,11 +64,11 @@ export enum Size {
 
 // Condition of the clothes
 export enum Condition {
-    NEW_TAG = 'new_tag',
-    NEW = 'new',
-    LIKE_NEW = 'like-new',
-    GOOD = 'good',
-    FAIR = 'fair'
+    NEW_TAG = 'newWithTags',
+    NEW = 'newNoTags',
+    LIKE_NEW = 'likeNew',
+    GOOD = 'worn',
+    FAIR = 'wellWorn'
 }
 
 // What is the clothing type?
@@ -98,4 +98,12 @@ export enum Style {
     S60 = '60s',
     S50 = '50s',
     VINTAGE = 'vintage'
+}
+
+
+export enum Reactions {
+    LIKE = "like",
+    HEART = "heart",
+    SMILE = "smile",
+    UNHAPPY = "unhappy"
 }

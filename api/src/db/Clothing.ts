@@ -22,7 +22,6 @@ import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 't
 
 // Since there is references to other tables
 import { User } from './User';
-import { Image } from './Image';
 
 // Enums that are used to limit acceptable values within the database
 import {
@@ -107,17 +106,6 @@ export class Clothing {
     })
     type: Type
 
-    // TODO: Meow
-    // Needs to be 1) an array of images (probs with a max size) and 2) implemented within the routes
-//    @ManyToOne(() => Image, { nullable: false })
-//    @JoinColumn({
-//        name: 'id',
-//        referencedColumnName: 'id',
-//    })
-      // A reference to the image
-//    image: Image;
-//
-//    @Column()
-      // The image's id
-//    id: Image['id'];
+    @Column("bytea", { array: true })
+    images: Buffer[];
 }

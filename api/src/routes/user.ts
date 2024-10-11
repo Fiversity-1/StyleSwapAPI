@@ -44,6 +44,7 @@ import {
 
 import { encrypt } from './helpful_helpers';
 
+import { In } from 'typeorm';
 /*
 
 postUser
@@ -67,11 +68,16 @@ Creates a new user in the database given the params, i.e. userId (gotten from fi
 export async function postUser(req: Request<UserRouteParams, any, UserBodyParams>, res: Response) {
     const { userId } = req.params;
 
-    let { lat, lon, bio } = req.body;
+    let { lat, lon, bio, name } = req.body;
 
     if (!lat || !lon) {
         res.status(400).json('Missing location, send the addy');
         return;
+    }
+
+    if (!name) {
+	    res.status(400).json("Missing name");
+	    return;
     }
 
     if (!userId) {
@@ -97,6 +103,7 @@ export async function postUser(req: Request<UserRouteParams, any, UserBodyParams
     newUser.userId = userId;
     newUser.picture = "help";
     newUser.bio = bio;
+    newUser.name = name;
 
     // Add picture logic
 
@@ -105,7 +112,24 @@ export async function postUser(req: Request<UserRouteParams, any, UserBodyParams
     res.status(201).json('Made a user');
 }
 
+/*
 
+getUser
+========
+Inputs:
+req: Request<UserRouteParams>
+res: Response
+
+Outputs:
+void
+
+Response is handled by the input res
+
+Purpose:
+
+Gets user information in particular the users they have matched with, their bio and their own userId (cause why not?)
+
+*/
 export async function getUser(req: Request<UserRouteParams>, res: Response) {
     const { userId } = req.params;
     
@@ -117,7 +141,9 @@ export async function getUser(req: Request<UserRouteParams>, res: Response) {
 
     const userRepository = getConnection().getRepository(UserDb);
 
-    let user = await userRepository.findOne({ where: { userId} });
+    let user = await userRepository.findOne({ 
+	    select: ["userId", "bio", "matched"],
+	    where: { userId } });
 
     if (!user) {
 	res.status(404).json('No user found');
@@ -210,10 +236,14 @@ export async function swipe(req: Request<SwipeRouteParams, any, any, SwipeQueryP
     let matches = userClothes.filter(clothe => user2.liked.includes(clothe.clothingId));
 
     // Return the clothes
-    if (!matches) {
+    if (!matches || Math.random() >= 0.5) {
 	    res.status(200).json("Liked but no matches");
 	    return;
     }
+
+    // Put all of these clothes in the match field
+    user.matched.push(...matches.map(item => item.clothingId));
+
     res.status(200).json(matches);
 }
 
@@ -306,6 +336,44 @@ export async function unmatch_handles(req: Request<BlockRouteParams>, res: Respo
 
 /*
 
+match_handles
+========
+Inputs:
+req: Request<BlockRouteParams>
+res: Response
+
+BlockRouteParams is defined in ../types.ts
+
+Outputs:
+void
+
+Response is handled by the input res
+
+Purpose:
+
+Is a wrapper so that there is less code dup, pretty much just calls unmatch().
+
+*/
+export async function match_handles(req: Request<UserRouteParams>, res: Response) {
+	const { userId } = req.params;
+
+	const userRepo = getConnection().getRepository(UserDb);
+	const user = await userRepo.findOne({ where: { userId } });
+
+	if (!user ) {
+		res.status(404).json("Missing userId")
+		return;
+	}
+
+	const clothingRepo = getConnection().getRepository(ClothingDb);
+
+	const clothes = await clothingRepo.find({ where: { clothingId: In(user.matched)  }});
+	
+	res.status(200).json(clothes);
+}
+
+/*
+
 unmatch
 ========
 Inputs:
@@ -333,10 +401,11 @@ async function unmatch(userId1: string, userId2: string): Promise<number> {
 	}
 
 	// Remove the userId of one user from the matched array in the other user
-	user1.matched = user1.matched.filter(id => id !== userId2);
-	user2.matched = user2.matched.filter(id => id !== userId1);
+//	user1.matched = user1.matched.filter(id => id !== userId2);
+//	user2.matched = user2.matched.filter(id => id !== userId1);
 
 	await userRepo.save(user1);
 	await userRepo.save(user2);
 	return 201;
 }
+

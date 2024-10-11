@@ -41,7 +41,8 @@ import {
     getUser, // gets user information
     swipe, // swipes (likes/dislikes) a clothing item
     block, // blocks another user
-    unmatch_handles // unmatches from another user
+    unmatch_handles, // unmatches from another user
+    match_handles
 } from './user';
 
 export const router = Router(); // Makes a router and exports it so that it can be used in ../index.ts
@@ -65,6 +66,8 @@ router.get('/user/unmatch/:userId1/:userId2', unmatch_handles);
 
 // Likes a piece of clothing
 router.get('/clothes/like/:userId/:clotheId', swipe);
+
+router.get('/clothes/matches/:userId', match_handles);
 
 ///// DELETE ROUTES
 router.delete('/clothes/:userId/:clothingId', deleteClothing);
