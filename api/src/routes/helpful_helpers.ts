@@ -45,7 +45,7 @@ export function calculateDistance(lat1: string, lon1: string, lat2: string, lon2
     return haversineDistance(lat1I, lon1I, lat2I, lon2I);
 }
 
-// ChatGPT generated the below functions
+// ChatGPT generated the below functions: Prompt - "How to get the distance between to coords in ts"
 function toRadians(degrees: number): number {
     return degrees * (Math.PI / 180);
 }
