@@ -10,11 +10,6 @@ The API is created using NodeJS since it is an industry standard for API servers
 ### Documentation
 [Online Documentation via Postman](https://documenter.getpostman.com/view/37269020/2sA3kaBdp1)
 
-Alternatively can access it via /docs/Clothing Swap API documentation.pdf
-
-
-
-
 # Project: Clothing Swap API documentation
 Overrview of all API calls within the API.
 # 📁 Collection: Health 
