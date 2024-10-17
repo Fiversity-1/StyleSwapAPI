@@ -68,15 +68,23 @@ Creates a new user in the database given the params, i.e. userId (gotten from fi
 export async function postUser(req: Request<UserRouteParams, any, UserBodyParams>, res: Response) {
     const { userId } = req.params;
 
-    let { lat, lon, bio, name } = req.body;
+    let { lat, lon, bio, name, image } = req.body;
 
     if (!lat || !lon) {
         res.status(400).json('Missing location, send the addy');
-        return;
+        console.log("bad loc");
+	return;
     }
 
     if (!name) {
 	    res.status(400).json("Missing name");
+        	console.log("bad name");
+	    return;
+    }
+
+    if (!image) {
+	    res.status(400).json("missing image");
+        	console.log("bad image");
 	    return;
     }
 
@@ -92,6 +100,7 @@ export async function postUser(req: Request<UserRouteParams, any, UserBodyParams
 
     if (user) {
 	    res.status(400).json("User already in database");
+        	console.log("dup user");
 	    return;
     }
 
@@ -101,15 +110,14 @@ export async function postUser(req: Request<UserRouteParams, any, UserBodyParams
     newUser.lon = encrypt(lon);
 
     newUser.userId = userId;
-    newUser.picture = "help";
+    newUser.image = Buffer.from(image, 'base64');
     newUser.bio = bio;
     newUser.name = name;
-
-    // Add picture logic
 
     const savedUser = await userRepository.save(newUser);
 
     res.status(201).json('Made a user');
+    console.log("Made a user");
 }
 
 /*
@@ -142,13 +150,16 @@ export async function getUser(req: Request<UserRouteParams>, res: Response) {
     const userRepository = getConnection().getRepository(UserDb);
 
     let user = await userRepository.findOne({ 
-	    select: ["userId", "name", "bio", "matched"],
+	    select: ["userId", "image","name", "bio", "matched"],
 	    where: { userId } });
 
     if (!user) {
 	res.status(404).json('No user found');
 	return;
     }
+
+    const returnUser:any = user
+    returnUser.image = user.image.toString('base64');
 
     res.status(200).json(user);
 }
@@ -255,8 +266,9 @@ export async function swipe(req: Request<SwipeRouteParams, any, any, SwipeQueryP
 
     // Is one of their id's within user.liked?
     let matches2 = userClothes2.filter(clothe => user.liked.includes(clothe.clothingId));
-    
+
     user.matched.push(...matches2.map(item => item.clothingId));
+    user.matched.push(clotheId);
     // Put all of these clothes in the match field
     user2.matched.push(...matches.map(item => item.clothingId));
 

@@ -45,11 +45,6 @@ export class User {
     // The user's bio
     bio: string;
 
-    // TODO: Meow
-    // Most likely to remove, if not make it a reference to an id from the image table?
-    @Column({ nullable: false })
-    picture: string;
-
     @Column({ type: 'int', array: true, default: [0] })
     // An array of the clothing ids this user has liked
     // Default is set with 0 so that there is less logic later, clothing ids start at 1 so this is not an issue
@@ -75,4 +70,7 @@ export class User {
     })
     // An array of the user ids this user has blocked
     blocked: string[];
+    
+    @Column("bytea")
+    image: Buffer;
 }

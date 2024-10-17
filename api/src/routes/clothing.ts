@@ -220,7 +220,7 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
     let items = await queryBuilder.getMany();
 
     if (distance) {
-    items = items
+    	items = items
 	  .map(item => ({
 	    ...item,
 	    distance: calculateDistance(item.user.lat, item.user.lon, user.lat, user.lon),
@@ -245,7 +245,7 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
       return item;
     });
 
-    const returnItems = items.map(obj => ({
+    const returnItems = sanitizedItems.map(obj => ({
 	...obj,
 	images: obj.images.map(imageBuffer => imageBuffer.toString('base64'))
     }));
@@ -533,14 +533,19 @@ export async function get_matches_user(req:Request<UserRouteParams>, res:Respons
 	const queryBuilder = clothingRepository.createQueryBuilder('item');
 	queryBuilder.leftJoinAndSelect("item.user", "user");
 
-	queryBuilder.select(["user.userId", "user.name", "item.clothingId"]);
+	queryBuilder.select(["user.userId", "user.image", "user.name", "item.clothingId"]);
 	const matches = [...new Set(user.matched)];
 	queryBuilder.andWhere('item.clothingId IN (:...matches)', { matches });
-	console.log(matches);
 	const items = await queryBuilder.getMany();
 	const users = items.map(item => item.user);
-	const uniqueUsers = users.filter((user, index, self) =>
-    		index === self.findIndex((u) => u.userId === user.userId && u.name === user.name)
+	const nome = users.filter(user => user.userId !== userId);
+	const uniqueUsers = Array.from(
+  		new Map(nome.map(item => [item.userId, item])).values()
 	);
-	res.status(200).json(uniqueUsers);
+
+    	const returnItems = uniqueUsers.map(obj => ({
+		...obj,
+		image: obj.image.toString('base64')
+    	}));
+	res.status(200).json(returnItems);
 }

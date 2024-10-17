@@ -42,7 +42,8 @@ export type UserBodyParams = {
     lon: string,
     lat: string,
     bio: string,
-    name: string
+    name: string,
+    image: string
 };
 
 // The route params for adding / searching a new clothing item to the database and other related routes
