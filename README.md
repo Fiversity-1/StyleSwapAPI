@@ -10,16 +10,8 @@
 
 Alternatively can access it via /docs/Clothing Swap API documentation.pdf
 
-#### Adding tags to the database enums
-To add a tag to a database enum see the file ```./api/src/enums.ts```, this will allow you to add tags to an existing enum, etc.
 
-Obviously if you want to add a completely new enum for the clothing, this will need some code, but editing the ```./api/src/db/Clothing.ts``` and the ```./api/src/routes/clothing.ts``` to add the correct
-code in there
 
-#### Running
-Warning This repository is not "batteries included". It does NOT include instructions to run a full Style Swap server, and we will not provide them. Please do not ask for help on this; you will be turned away. There are various security related environment variables in use that are obviously not supplied here and as such this will not work by just running the code.
-
-# Clothing Swap API documentation (Might be bad quality as external tool was used to export it from postman, see original [here](https://documenter.getpostman.com/view/37269020/2sA3kaBdp1))
 
 # Project: Clothing Swap API documentation
 Overrview of all API calls within the API.
@@ -27,25 +19,6 @@ Overrview of all API calls within the API.
 
 
 ## End-point: Check Health
-Queries the database and sees if it is running, implicitly checks if the server is also up.
-### Method: GET
->```
->{{url}}/api/health
->```
-### Response: 200
-```json
-"EVERYTHING IS A-OKAY"
-```
-
-### Response: 503
-```json
-"ERROR: ECONNREFUSED: Failed to connect"
-```
-
-
-⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃
-
-## End-point: Check Health Copy
 Queries the database and sees if it is running, implicitly checks if the server is also up.
 ### Method: GET
 >```
@@ -76,9 +49,10 @@ Makes a new user give the Auth0 id. This is not to sign in / only for new users.
 
 ```json
 {
-    "lat": "41.303921",
-    "lon": "-81.901693",
-    "bio": "Sick drip and even sicker rhymes #meow"
+    "lat": "The lat coord of the user",
+    "lon": "The lon coord of the user",
+    "bio": "The bio for the user profile",
+    "name": "The users name"
 }
 ```
 
@@ -111,6 +85,7 @@ Makes a new user give the Auth0 id. This is not to sign in / only for new users.
 ```json
 {
     "userId": "jacksons",
+    "name": "jackson",
     "bio": "Sick drip and even sicker rhymes #meow",
     "matched": [
         "[]"
@@ -138,10 +113,7 @@ Retrieves new options to swipe on based on the user's settings i.e. tags and loc
 
 ```json
 {
-    "colour": ["red", "blue"],
-    "type": ["hat", "jumper"],
-    "condition": ["new", "like-new"],
-    "gender": ["male", "unisex"]
+    "distance": "The radius to search in"
 }
 
 ```
@@ -157,61 +129,158 @@ Retrieves new options to swipe on based on the user's settings i.e. tags and loc
 ```json
 [
     {
-        "clothingId": 1,
-        "userId": "jacksons",
-        "picture": null,
-        "bio": "meow",
+        "clothingId": 25,
+        "userId": "fqxKpnY1ssbMplM62p1e4LsTOF22",
+        "bio": "ff",
         "colour": [
+            "purple",
             "red"
         ],
-        "size": "XS",
-        "gender": "unisex",
-        "condition": "new",
+        "size": "L",
+        "gender": "male",
+        "condition": "worn",
         "style": null,
-        "type": "hat",
+        "type": "coat",
+        "images": [
+           thisisanexampleofanimage 
+        ],
         "user": {
-            "userId": "jacksons",
+            "userId": "fqxKpnY1ssbMplM62p1e4LsTOF22",
+            "name": "Rowan Gray (RowBro)",
             "lat": "",
             "lon": ""
-        }
+        },
+        "distance": 13.515687342707686
     },
     {
-        "clothingId": 2,
-        "userId": "jacksons",
-        "picture": null,
-        "bio": "meow",
+        "clothingId": 24,
+        "userId": "fqxKpnY1ssbMplM62p1e4LsTOF22",
+        "bio": "rjjcuf",
         "colour": [
-            "red"
+            "green",
+            "purple",
+            "orange"
         ],
         "size": "XS",
-        "gender": "unisex",
-        "condition": "new",
+        "gender": "female",
+        "condition": "newWithTags",
         "style": null,
-        "type": "hat",
+        "type": "coat",
+        "images": [
+           thisisanexampleofanimage 
+        ],
         "user": {
-            "userId": "jacksons",
+            "userId": "fqxKpnY1ssbMplM62p1e4LsTOF22",
+            "name": "Rowan Gray (RowBro)",
             "lat": "",
             "lon": ""
-        }
+        },
+        "distance": 13.515687342707686
     },
     {
-        "clothingId": 3,
-        "userId": "jacksons",
-        "picture": null,
-        "bio": "meow",
+        "clothingId": 23,
+        "userId": "fqxKpnY1ssbMplM62p1e4LsTOF22",
+        "bio": "Farmer shirt lol",
         "colour": [
-            "red"
+            "lightBlue",
+            "darkBlue",
+            "orange"
         ],
-        "size": "XS",
-        "gender": "unisex",
-        "condition": "new",
+        "size": "M",
+        "gender": "male",
+        "condition": "newNoTags",
         "style": null,
-        "type": "hat",
+        "type": "jumper",
+        "images": [
+           thisisanexampleofanimage  
+        ],
         "user": {
-            "userId": "jacksons",
+            "userId": "fqxKpnY1ssbMplM62p1e4LsTOF22",
+            "name": "Rowan Gray (RowBro)",
             "lat": "",
             "lon": ""
-        }
+        },
+        "distance": 13.515687342707686
+    },
+    {
+        "clothingId": 22,
+        "userId": "fqxKpnY1ssbMplM62p1e4LsTOF22",
+        "bio": "work shorts",
+        "colour": [
+            "black"
+        ],
+        "size": "L",
+        "gender": "male",
+        "condition": "likeNew",
+        "style": null,
+        "type": "pants",
+        "images": [
+           thisisanexampleofanimage  
+        ],
+        "user": {
+            "userId": "fqxKpnY1ssbMplM62p1e4LsTOF22",
+            "name": "Rowan Gray (RowBro)",
+            "lat": "",
+            "lon": ""
+        },
+        "distance": 13.515687342707686
+    },
+    {
+        "clothingId": 10,
+        "userId": "fqxKpnY1ssbMplM62p1e4LsTOF22",
+        "bio": "test image",
+        "colour": [
+            "yellow"
+        ],
+        "size": "L",
+        "gender": "female",
+        "condition": "newNoTags",
+        "style": null,
+        "type": "pants",
+        "images": [
+           thisisanexampleofanimage 
+        ],
+        "user": {
+            "userId": "fqxKpnY1ssbMplM62p1e4LsTOF22",
+            "name": "Rowan Gray (RowBro)",
+            "lat": "",
+            "lon": ""
+        },
+        "distance": 13.515687342707686
+    }
+]
+```
+
+### Response: 404
+```json
+"User not found"
+```
+
+### Response: 200
+```json
+[
+    {
+        "clothingId": 35,
+        "userId": "CvERSFKX9hNfsnM9udUsv7iBKRD3",
+        "bio": "Nice",
+        "colour": [
+            "green"
+        ],
+        "size": "XS",
+        "gender": "male",
+        "condition": "newNoTags",
+        "style": null,
+        "type": "shirt",
+        "images": [
+           thisisanexampleofanimage 
+        ],
+        "user": {
+            "userId": "CvERSFKX9hNfsnM9udUsv7iBKRD3",
+            "name": "Jacob Poole",
+            "lat": "",
+            "lon": ""
+        },
+        "distance": 1372.014604003839
     }
 ]
 ```
@@ -232,6 +301,127 @@ Retrieves new options to swipe on based on the user's settings i.e. tags and loc
 |amount|Integer|
 
 
+### Response: 200
+```json
+[
+    {
+        "clothingId": 2,
+        "userId": "jackson",
+        "bio": "meow",
+        "colour": [
+            "red"
+        ],
+        "size": "XS",
+        "gender": "unisex",
+        "condition": "newNoTags",
+        "style": null,
+        "type": "hat",
+        "images": [
+            "MTI0NDIxNA==",
+            "MTI0MTI0"
+        ]
+    },
+    {
+        "clothingId": 3,
+        "userId": "jackson",
+        "bio": "meow",
+        "colour": [
+            "red"
+        ],
+        "size": "XS",
+        "gender": "unisex",
+        "condition": "newNoTags",
+        "style": null,
+        "type": "hat",
+        "images": [
+            "MTI0NDIxNA==",
+            "MTI0MTI0"
+        ]
+    },
+    {
+        "clothingId": 4,
+        "userId": "jackson",
+        "bio": "meow",
+        "colour": [
+            "red"
+        ],
+        "size": "XS",
+        "gender": "unisex",
+        "condition": "newNoTags",
+        "style": null,
+        "type": "hat",
+        "images": [
+            "MTI0NDIxNA==",
+            "MTI0MTI0"
+        ]
+    },
+    {
+        "clothingId": 5,
+        "userId": "jackson",
+        "bio": "meow",
+        "colour": [
+            "red"
+        ],
+        "size": "XS",
+        "gender": "unisex",
+        "condition": "newNoTags",
+        "style": null,
+        "type": "hat",
+        "images": [
+            "MTI0NDIxNA==",
+            "MTI0MTI0"
+        ]
+    },
+    {
+        "clothingId": 7,
+        "userId": "jackson",
+        "bio": "test",
+        "colour": [
+            "purple"
+        ],
+        "size": "XXS",
+        "gender": "female",
+        "condition": "newNoTags",
+        "style": null,
+        "type": "pants",
+        "images": []
+    },
+    {
+        "clothingId": 8,
+        "userId": "jackson",
+        "bio": "test",
+        "colour": [
+            "purple"
+        ],
+        "size": "XXS",
+        "gender": "female",
+        "condition": "newNoTags",
+        "style": null,
+        "type": "pants",
+        "images": []
+    },
+    {
+        "clothingId": 12,
+        "userId": "jackson",
+        "bio": "test",
+        "colour": [
+            "purple"
+        ],
+        "size": "XXS",
+        "gender": "female",
+        "condition": "newNoTags",
+        "style": null,
+        "type": "pants",
+        "images": []
+    }
+]
+```
+
+### Response: 404
+```json
+"User not found"
+```
+
 
 ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃
 
@@ -244,22 +434,20 @@ Adds a new clothing to the database with tags, sizes etc. given from the body.
 ### Body (**raw**)
 
 ```json
-{
-    "size": "XS",
-    "colour": ["red"],
-    "condition": "new",
-    "gender": "unisex",
-    "bio": "meow",
-    "type": "hat"
-}
+{"colour":["purple"],"size":"XXS","condition":"newNoTags","gender":"female","type":"pants","bio":"test","images":[]}
 
 ```
 
 ### Response: 201
 ```json
 {
-    "itemId": 2
+    "itemId": 26
 }
+```
+
+### Response: 404
+```json
+"User not found"
 ```
 
 
@@ -277,12 +465,21 @@ Edits a previous items tags, size, etc. Body params are all optional but there s
 {
     "size": ["XXL"],
     "colour": ["red", "blue"],
-    "brand": ["lakshansFavouriteClothingBrand", "clothing"],
     "type": "shirt",
-    "condition": "new",
+    "condition": "newWithTags",
     "gender": "male"
 }
 
+```
+
+### Response: 200
+```json
+"Item updated"
+```
+
+### Response: 403
+```json
+"Unauthorised to edit this item"
 ```
 
 
@@ -291,52 +488,43 @@ Edits a previous items tags, size, etc. Body params are all optional but there s
 ## End-point: Delete Item
 ### Method: DELETE
 >```
->{{url}}/api/clothes/:clotheID
+>{{url}}/api/clothes/:userId/:clothingId
 >```
 ### Body (**raw**)
 
 ```json
-{
-    "userID": "need to verify poster is id that is deleting the item."
-}
+
 ```
 
-
-⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃
-# 📁 Collection: Messaging 
-
-
-## End-point: Send a message
-Sends a message to a user.
-### Method: POST
->```
->{{url}}/api/messages/send/:userID
->```
-### Body (**raw**)
-
+### Response: 203
 ```json
-{
-    "recipientID": "The persons ID you are messaging",
-    "message": "The message text you are sending"
-}
+"Item deleted"
 ```
 
 
 ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃
 
-## End-point: Get Messages
-Get messages between two users.
+## End-point: Add item to trade
 ### Method: GET
 >```
->{{url}}/api/messages/:userID/:otherUserID
+>{{url}}/clothes/:userId/match/:clotheId
 >```
-### Query Params
 
-|Param|value|
-|---|---|
-|amount|1|
+⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃
 
+## End-point: Remove item to trade
+### Method: GET
+>```
+>{{url}}/clothes/:userId/unmatch/:clotheId
+>```
 
+⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃
+
+## End-point: Get matches between
+### Method: GET
+>```
+>{{url}}/api/match/:userId1/:userId2
+>```
 
 ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃
 # 📁 Collection: Matching 
@@ -360,13 +548,46 @@ Get messages between two users.
 |Like|true|
 
 
+### Response: 200
+```json
+[
+    {
+        "clothingId": 25,
+        "userId": "fqxKpnY1ssbMplM62p1e4LsTOF22",
+        "bio": "ff",
+        "colour": [
+            "purple",
+            "red"
+        ],
+        "size": "L",
+        "gender": "male",
+        "condition": "worn",
+        "style": null,
+        "type": "coat",
+        "images": [
+           thisisanexampleofanimage 
+        ]
+    }
+]
+```
+
+### Response: 200
+```json
+"Liked but no matches"
+```
+
+### Response: 404
+```json
+"No Clothing item found"
+```
+
 
 ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃
 
 ## End-point: Block
 ### Method: GET
 >```
->{{url}}
+>{{url}}/api/user/block/:userId1/:userId2
 >```
 
 ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃
@@ -374,27 +595,27 @@ Get messages between two users.
 ## End-point: Unmatch
 ### Method: GET
 >```
->{{url}}
+>{{url}}/api/user/unmatch/:userId1/:userId2
 >```
+
+⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃
+
+## End-point: Get user matches
+### Method: GET
+>```
+>{{url}}/api/match/:userId
+>```
+### Response: 200
+```json
+[
+    {
+        "userId": "jacksonsss",
+        "name": "The users name"
+    }
+]
+```
+
 
 ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃ ⁃
 _________________________________________________
 Powered By: [postman-to-markdown](https://github.com/bautistaj/postman-to-markdown/)
-
-
-
-
-### An ASCII Cat
-```
-  ,-.       _,---._ __  / \
- /  )    .-'       `./ /   \
-(  (   ,'            `/    /|
- \  `-"             \'\   / |
-  `.              ,  \ \ /  |
-   /`.          ,'-`----Y   |
-  (            ;        |   '
-  |  ,-.    ,-'         |  /
-  |  | (   |        hjw | /
-  )  |  \  `.___________|/
-  `--'   `--'
-```
