@@ -3,7 +3,9 @@
 [![.github/workflows/main.yml](https://github.com/Fiversity-1/StyleSwapAPI/actions/workflows/main.yml/badge.svg)](https://github.com/Fiversity-1/StyleSwapAPI/actions/workflows/main.yml)
 
 ### What is Style Swap?
-<!-- copy from app --->
+StyleSwap is a prototype android application which provides a convenient and seemless interface for users to swap their clothes.
+
+The API is created using NodeJS since it is an industry standard for API servers. The database is PostgresSQL.
 
 ### Documentation
 [Online Documentation via Postman](https://documenter.getpostman.com/view/37269020/2sA3kaBdp1)
