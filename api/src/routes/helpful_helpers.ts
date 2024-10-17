@@ -19,7 +19,6 @@ const IV = Buffer.from(process.env.IV || "ababababa", 'hex');
 const ALGO = 'aes-256-cbc';
 
 export function encrypt(text: string): string {
-    console.log(text);
     let cipher = crypto.createCipheriv(ALGO, KEY, IV);
     let encrypted = cipher.update(text, "utf8", "base64");
     encrypted += cipher.final("base64");
