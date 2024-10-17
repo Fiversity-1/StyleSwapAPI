@@ -29,7 +29,8 @@ import {
     UserRouteParams,
     ClothingBodyParams,
     ClothingGetBodyParams,
-    ClothingRouteParams
+    ClothingRouteParams,
+    MatchRouteParams
 } from '../types';
 
 import { getConnection } from '../db';
@@ -38,9 +39,12 @@ import { User as UserDb } from '../db/User';
 import {
     encrypt,
     decrypt,
-    operationExtraction,
     calculateDistance
 } from './helpful_helpers';
+
+import { 
+    Size
+} from '../enums';
 
 /*
 
@@ -107,7 +111,8 @@ export async function postClothing(req: Request<UserRouteParams, any, ClothingBo
     newItem.type = type;
     newItem.bio = bio;
     newItem.userId = userId;
-    newItem.images = images;
+    newItem.images = images.map(image => Buffer.from(image, 'base64'));
+
 
     const savedItem = await clothingRepository.save(newItem)
 
@@ -143,10 +148,9 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
         size,
         condition,
         gender,
-        style,
         type,
         distance,
-        search
+	search
     } = req.body; // The filters that will limit the search
 
     // Get the user and make sure they are legit
@@ -167,61 +171,11 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
 
     const clothingRepository = getConnection().getRepository(ClothingDb);
 
-    // TODO: Meow
-    // This maybe no longer needed
-    // Adds onto the arrays passed in or makes a new array to further limit the search based on the text input
-    if (search) {
-        const extracted = operationExtraction(search);
-
-        // Add onto each of the arrays or make a new
-        if (extracted.size) {
-            if (!size) {
-                size = [];
-            }
-            size.push(...extracted.size);
-        }
-
-        if (extracted.condition) {
-            if (!condition) {
-                condition = [];
-            }
-            condition.push(...extracted.condition);
-        }
-
-        if (extracted.gender) {
-            if (!gender) {
-                gender = [];
-            }
-            gender.push(...extracted.gender);
-        }
-
-        if (extracted.style) {
-            if (!style) {
-                style = [];
-            }
-            style.push(...extracted.style);
-        }
-
-        if (extracted.type) {
-            if (!type) {
-                type = [];
-            }
-            type.push(...extracted.type);
-        }
-
-        if (extracted.colour) {
-            if (!colour) {
-                colour = [];
-            }
-            colour.push(...extracted.colour);
-        }
-    }
-
     // Make a dynamic query builder
     const queryBuilder = clothingRepository.createQueryBuilder('item');
 
     queryBuilder.leftJoinAndSelect("item.user", "user");
-    queryBuilder.select(["item", "user.userId", "user.lat", "user.lon"]);
+    queryBuilder.select(["item", "user.userId", "user.name", "user.lat", "user.lon"]);
 
     // If the search should be limited by this, enter the if statement and add on to the query
     if (colour) {
@@ -238,10 +192,6 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
 
     if (gender) {
         queryBuilder.andWhere('item.gender IN (:...gender)', { gender });
-    }
-
-    if (style) {
-        queryBuilder.andWhere('item.style IN (:...style)', { style });
     }
 
     if (type) {
@@ -269,12 +219,21 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
     // Return
     let items = await queryBuilder.getMany();
 
+    if (distance) {
     items = items
 	  .map(item => ({
 	    ...item,
 	    distance: calculateDistance(item.user.lat, item.user.lon, user.lat, user.lon),
 	  }))
 	  .filter(item => item.distance <= distance);
+     } else {
+     
+    	items = items
+	  	.map(item => ({
+	    	...item,
+	    	distance: calculateDistance(item.user.lat, item.user.lon, user.lat, user.lon),
+			  }));
+     }
 
     // Remove lat and lon from the user in the result set cause we dont want to return (even tho they are encrypted)
     const sanitizedItems = items.map(item => {
@@ -286,8 +245,12 @@ export async function getClothing(req:Request<UserRouteParams, any, ClothingGetB
       return item;
     });
 
-    res.status(200).json(items);
-    return;
+    const returnItems = items.map(obj => ({
+	...obj,
+	images: obj.images.map(imageBuffer => imageBuffer.toString('base64'))
+    }));
+
+    res.status(200).json(returnItems);
 }
 
 /*
@@ -322,7 +285,12 @@ export async function getUserClothing(req:Request<UserRouteParams>, res: Respons
     const clothingRepository = getConnection().getRepository(ClothingDb);
     const items = await clothingRepository.find({ where: { userId } });
 
-    res.status(200).json(items);
+    const returnItems = items.map(obj => ({
+	...obj,
+	images: obj.images.map(imageBuffer => imageBuffer.toString('base64'))
+    }));
+
+    res.status(200).json(returnItems);
 }
 
 /*
@@ -370,7 +338,7 @@ export async function deleteClothing(req:Request<ClothingRouteParams>, res: Resp
 
     await clothingRepository.remove(item);
 
-    res.status(200).json("Item deleted");
+    res.status(203).json("Item deleted");
 }
 
 /*
@@ -442,7 +410,7 @@ export async function patchClothing(req:Request<ClothingRouteParams, any, Clothi
     const userRepository = getConnection().getRepository(UserDb);
     const user = await userRepository.findOne({ where: {userId} });
 
-    if (!userId) {
+    if (!user) {
         res.status(404).json('User not found');
         return;
     }
@@ -495,4 +463,84 @@ export async function patchClothing(req:Request<ClothingRouteParams, any, Clothi
 
     res.status(200).json('Item updated');
     return;
+}
+
+
+export async function match_item(req:Request<MatchRouteParams>, res:Response) {
+    const { userId, clotheId } = req.params;
+    const userRepo = getConnection().getRepository(UserDb);
+    const user = await userRepo.findOne({ where: {userId} });
+
+    const clothingId = clotheId;
+
+    if (!user) {
+        res.status(404).json('User not found');
+        return;
+    }
+
+    // Validate clothingId
+    const clothingRepository = getConnection().getRepository(ClothingDb);
+    const item = await clothingRepository.findOne({ where: { clothingId } });
+
+    if (!item) {
+        res.status(404).json('Item not found');
+        return;
+    }
+
+    user.matched.push(clotheId);
+    await userRepo.save(user);
+    res.status(200).json("Item matched");
+}
+
+export async function unmatch_item(req:Request<MatchRouteParams>, res:Response) {
+    const { userId, clotheId } = req.params;
+    const userRepo = getConnection().getRepository(UserDb);
+    const user = await userRepo.findOne({ where: {userId} });
+
+    const clothingId = clotheId;
+
+    if (!user) {
+        res.status(404).json('User not found');
+        return;
+    }
+
+    // Validate clothingId
+    const clothingRepository = getConnection().getRepository(ClothingDb);
+    const item = await clothingRepository.findOne({ where: { clothingId } });
+
+    if (!item) {
+        res.status(404).json('Item not found');
+        return;
+    }
+
+    user.matched = user.matched.filter(value=> value !== clothingId);
+    await userRepo.save(user);
+    res.status(200).json("Item matched");
+}
+
+export async function get_matches_user(req:Request<UserRouteParams>, res:Response) {
+	const { userId } = req.params;
+	const userRepo = getConnection().getRepository(UserDb);
+        const user = await userRepo.findOne({ where: {userId} });
+
+        if (!user) {
+            res.status(404).json('User not found');
+            return;
+        }
+
+        // Validate clothingId
+        const clothingRepository = getConnection().getRepository(ClothingDb);
+	const queryBuilder = clothingRepository.createQueryBuilder('item');
+	queryBuilder.leftJoinAndSelect("item.user", "user");
+
+	queryBuilder.select(["user.userId", "user.name", "item.clothingId"]);
+	const matches = [...new Set(user.matched)];
+	queryBuilder.andWhere('item.clothingId IN (:...matches)', { matches });
+	console.log(matches);
+	const items = await queryBuilder.getMany();
+	const users = items.map(item => item.user);
+	const uniqueUsers = users.filter((user, index, self) =>
+    		index === self.findIndex((u) => u.userId === user.userId && u.name === user.name)
+	);
+	res.status(200).json(uniqueUsers);
 }

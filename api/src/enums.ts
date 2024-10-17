@@ -29,12 +29,15 @@ export enum Colour {
     ORANGE = 'orange',
     YELLOW = 'yellow',
     GREEN = 'green',
+    LIGHTBLUE = 'lightBlue',
     BLUE = 'blue',
+    DARKBLUE = 'darkBlue',
     PURPLE = 'purple',
     PINK = 'pink',
     BROWN = 'brown',
     TAN = 'tan',
-    GREY = 'grey',
+    LIGHTGREY = 'lightGrey',
+    DARKGREY = 'darkGrey',
     BLACK = 'black',
     WHITE = 'white',
     GOLD = 'gold',
@@ -84,7 +87,15 @@ export enum Type {
     SKIRT = 'skirt',
     DRESS = 'dress',
     SHOES = 'shoes',
-    JUMPER = 'jumper'
+    JUMPER = 'jumper',
+    JACKET = 'jacket',
+    SWEATER = 'sweater',
+    COAT = 'coat',
+    GLOVES = 'gloves',
+    VEST = 'vest',
+    LEGGINGS = 'leggings',
+    GLASSES = 'glasses',
+    TIGHTS = 'tights'
 }
 
 // TODO: See below

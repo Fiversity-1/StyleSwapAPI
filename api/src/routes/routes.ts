@@ -33,7 +33,10 @@ import {
     getUserClothing, // gets all clothing items from a user
     deleteClothing, // removes a piece of clothing from a user
     getLikedClothing, // gets all of the liked clothing from a user
-    patchClothing // edits a clothing item from a user
+    patchClothing, // edits a clothing item from a user
+    get_matches_user,
+    match_item,  // To add a item to a trade
+    unmatch_item  // To add a item to a trade
 } from './clothing';
 
 import {
@@ -42,7 +45,8 @@ import {
     swipe, // swipes (likes/dislikes) a clothing item
     block, // blocks another user
     unmatch_handles, // unmatches from another user
-    match_handles
+    match_handles,
+    get_match
 } from './user';
 
 export const router = Router(); // Makes a router and exports it so that it can be used in ../index.ts
@@ -68,6 +72,13 @@ router.get('/user/unmatch/:userId1/:userId2', unmatch_handles);
 router.get('/clothes/like/:userId/:clotheId', swipe);
 
 router.get('/clothes/matches/:userId', match_handles);
+
+router.get('/clothes/:userId/match/:clotheId', match_item);
+router.get('/clothes/:userId/unmatch/:clotheId', unmatch_item);
+
+router.get('/clothes/match/:userId1/:userId2', get_match);
+
+router.get('/match/:userId', get_matches_user);
 
 ///// DELETE ROUTES
 router.delete('/clothes/:userId/:clothingId', deleteClothing);

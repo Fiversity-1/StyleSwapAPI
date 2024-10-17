@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import * as dotenv from 'dotenv';
 
-import { ClothingParams, SizeWithNumber } from '../types';
+import { ClothingParams } from '../types';
 
 import {
     Gender,
@@ -32,50 +32,16 @@ export function decrypt(text: string): string {
     return decrypted + decipher.final("utf8");
 }
 
-export function operationExtraction(text: string): ClothingParams {
-    const styles = Object.values(Style);
-    const genders = Object.values(Gender);
-    const types = Object.values(Type);
-    const sizes = Object.values(Size);
-    const conditions = Object.values(Condition);
-    const colours = Object.values(Colour);
-
-    const styleMatch = styles.filter((style) => text.includes(style));
-    const genderMatch = genders.filter((gender) => text.includes(gender));
-    const typeMatch = types.filter((type) => text.includes(type));
-    // Add in size matching for numbers should be like size 9 or SiZe 10
-    let sizeMatch: SizeWithNumber[] = sizes.filter((size) => text.includes(size));
-
-    const regex = /size\s*(\d+)/i;
-    const match = text.match(regex);
-
-    if (match) {
-        sizeMatch.push(parseInt(match[1]));
-    }
-
-    const conditionMatch = conditions.filter((condition) => text.includes(condition));
-    const colourMatch = colours.filter((colour) => text.includes(colour));
-
-    return {
-        style: handleEmptyArray(styleMatch),
-        gender: handleEmptyArray(genderMatch),
-        type: handleEmptyArray(typeMatch),
-        size: handleEmptyArray(sizeMatch),
-        condition: handleEmptyArray(conditionMatch),
-        colour: handleEmptyArray(colourMatch)
-    };
-}
-
 export function calculateDistance(lat1: string, lon1: string, lat2: string, lon2: string): number {
     lat1 = decrypt(lat1);
     lat2 = decrypt(lat2);
     lon1 = decrypt(lon1);
     lon2 = decrypt(lon2);
 
-    let lat1I = parseInt(lat1);
-    let lat2I = parseInt(lat2);
-    let lon1I = parseInt(lon1);
-    let lon2I = parseInt(lon2);
+    let lat1I = parseFloat(lat1);
+    let lat2I = parseFloat(lat2);
+    let lon1I = parseFloat(lon1);
+    let lon2I = parseFloat(lon2);
 
     return haversineDistance(lat1I, lon1I, lat2I, lon2I);
 }

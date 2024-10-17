@@ -142,7 +142,7 @@ export async function getUser(req: Request<UserRouteParams>, res: Response) {
     const userRepository = getConnection().getRepository(UserDb);
 
     let user = await userRepository.findOne({ 
-	    select: ["userId", "bio", "matched"],
+	    select: ["userId", "name", "bio", "matched"],
 	    where: { userId } });
 
     if (!user) {
@@ -213,6 +213,9 @@ export async function swipe(req: Request<SwipeRouteParams, any, any, SwipeQueryP
 
     // Some of the best code ever writtern!!!
     // I would like to thank my dad and my cat for this one!!!
+    // 
+    // Handles the case where like is not filled in as it is optional
+    // and in that case it is assumed to be a like
     if (like !== false) {
 	like = true;
     }
@@ -222,7 +225,9 @@ export async function swipe(req: Request<SwipeRouteParams, any, any, SwipeQueryP
 	user.liked.push(clotheId);
     } else {
 	user.disliked.push(clotheId);
-    	res.status(200).json('Clothing Item Disliked');
+    	res.status(201).json('Clothing Item Disliked');
+    	await userRepository.save(user)
+    	await userRepository.save(user2)
 	return;
     }
 
@@ -235,16 +240,106 @@ export async function swipe(req: Request<SwipeRouteParams, any, any, SwipeQueryP
     // Is one of their id's within user.liked?
     let matches = userClothes.filter(clothe => user2.liked.includes(clothe.clothingId));
 
+
     // Return the clothes
-    if (!matches || Math.random() >= 0.5) {
-	    res.status(200).json("Liked but no matches");
-	    return;
+    if (matches.length == 0) {
+	   res.status(201).json("Liked but no matches");
+    	   await userRepository.save(user)
+    	   await userRepository.save(user2)
+	   return;
+    }
+
+    // Put all of these clothes in the match field
+    
+    const userClothes2 = await clothingRepository.find({ where: { userId: userId2 } });
+
+    // Is one of their id's within user.liked?
+    let matches2 = userClothes2.filter(clothe => user.liked.includes(clothe.clothingId));
+    
+    user.matched.push(...matches2.map(item => item.clothingId));
+    // Put all of these clothes in the match field
+    user2.matched.push(...matches.map(item => item.clothingId));
+
+    await userRepository.save(user)
+    await userRepository.save(user2)
+
+    const returnItems = matches2.map(obj => ({
+	...obj,
+	images: obj.images.map(imageBuffer => imageBuffer.toString('base64'))
+    }));
+    
+    res.status(200).json(returnItems);
+}
+
+
+export async function get_match(req: Request<BlockRouteParams>, res: Response) {
+
+    const { userId1, userId2 } = req.params;
+
+    if (!userId1 || !userId2) {
+        res.status(400).json('Missing userId or clotheId');
+	return;
+    }
+
+    const userId = userId1;
+
+    const userRepository = getConnection().getRepository(UserDb);
+
+    let user = await userRepository.findOne({ where: { userId} });
+
+    if (!user) {
+	res.status(404).json('No user found');
+	return;
+    }
+
+    const clothingRepository = getConnection().getRepository(ClothingDb);
+
+    let user2 = await userRepository.findOne({ where: { userId: userId2 } });
+
+    if (!user2) {
+	res.status(500).json('Clothing item does not match an alive user');
+	return;
+    }
+    const userClothes = await clothingRepository.find({ where: { userId } });
+
+    // Is one of their id's within user.liked?
+    let matches = userClothes.filter(clothe => user2.liked.includes(clothe.clothingId));
+
+    // Return the clothes
+    if (matches.length == 0) {
+	   res.status(200).json("no matches");
+	   return;
     }
 
     // Put all of these clothes in the match field
     user.matched.push(...matches.map(item => item.clothingId));
+    
+    const userClothes2 = await clothingRepository.find({ where: { userId: userId2 } });
 
-    res.status(200).json(matches);
+    // Is one of their id's within user.liked?
+    let matches2 = userClothes2.filter(clothe => user.liked.includes(clothe.clothingId));
+    
+    // Put all of these clothes in the match field
+    user2.matched.push(...matches2.map(item => item.clothingId));
+
+    await userRepository.save(user)
+    await userRepository.save(user2)
+
+    const matches1org = matches.map(obj => ({
+	...obj,
+	images: obj.images.map(imageBuffer => imageBuffer.toString('base64'))
+    }));
+    const matches2org = matches2.map(obj => ({
+	...obj,
+	images: obj.images.map(imageBuffer => imageBuffer.toString('base64'))
+    }));
+
+    const returnItems = {
+	    toTrade: matches1org,
+	    toRecv: matches2org
+    };
+    
+    res.status(200).json(returnItems);
 }
 
 /*
@@ -400,9 +495,16 @@ async function unmatch(userId1: string, userId2: string): Promise<number> {
 		return 404;
 	}
 
+	const clothesRepo = getConnection().getRepository(ClothingDb);
+	const user1Clothes = await clothesRepo.find({ where: { userId: userId1 } });
+	const user2Clothes = await clothesRepo.find({ where: { userId: userId2 } });
+
+	const remove1 = user1Clothes.map(item => item.clothingId);
+	const remove2 = user2Clothes.map(item => item.clothingId);
+
 	// Remove the userId of one user from the matched array in the other user
-//	user1.matched = user1.matched.filter(id => id !== userId2);
-//	user2.matched = user2.matched.filter(id => id !== userId1);
+	user1.matched = user1.matched.filter(id => !remove2.includes(id));
+	user2.matched = user2.matched.filter(id => !remove1.includes(id));
 
 	await userRepo.save(user1);
 	await userRepo.save(user2);

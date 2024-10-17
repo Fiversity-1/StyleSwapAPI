@@ -33,12 +33,6 @@ import {
     Colour
 } from '../enums'
 
-// The size type since it is an union on Size and number
-import {
-    SizeWithNumber
-} from '../types'
-
-
 @Entity()
 export class Clothing {
     @PrimaryGeneratedColumn()
@@ -57,11 +51,6 @@ export class Clothing {
     // The user's id
     userId: User['userId'];
 
-    @Column({ nullable: true })
-    // TODO: Meow
-    // This is no longer needed, image is currently stored at the bottom
-    picture: string;
-
     @Column({ nullable: false })
     // The bio / description of the clothing piece
     bio: string;
@@ -75,8 +64,12 @@ export class Clothing {
     })
     colour:  Colour[];
 
-    @Column({ type: 'jsonb', nullable: false })
-    size: SizeWithNumber
+    @Column({
+        type: 'enum',
+        enum: Size,
+        nullable: false
+    })
+    size:  Size;
 
     @Column({
         type: 'enum',

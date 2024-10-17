@@ -26,8 +26,6 @@ import { Gender, Size, Condition, Type, Style, Colour } from './enums';
 
 // TODO: Meow
 // Sizes can have both a letter or a number so define that
-export type SizeWithNumber = Size | number;
-
 // Route params for adding a user and other related routes
 export type UserRouteParams = {
     userId: string
@@ -56,7 +54,7 @@ export type ClothingRouteParams = {
 // The body params for searching for clothing items, similar to the one below but with arrays for multi search
 export type ClothingGetBodyParams = {
     colour: Colour[],
-    size: SizeWithNumber[],
+    size: Size[],
     condition: Condition[],
     gender: Gender[],
     style: Style[],
@@ -68,18 +66,18 @@ export type ClothingGetBodyParams = {
 // The body params for adding a new clothing item for a given user
 export type ClothingBodyParams = {
     colour: Colour[],
-    size: SizeWithNumber,
+    size: Size,
     condition: Condition,
     gender: Gender,
     style: Style,
     type: Type,
     bio: string,
-    images: Buffer[]
+    images: string[]
 };
 
 // Anything a user can search for within the database
 export type ClothingParams = {
-    size: SizeWithNumber[] | null,
+    size: Size[] | null,
     condition: Condition[] | null,
     gender: Gender[] | null,
     style: Style[] | null,
@@ -126,4 +124,9 @@ export type ReactQueryParams = {
 export type CommentRouteParams = {
 	userId: string,
 	commentId: number
+}
+
+export type MatchRouteParams = {
+	userId: string,
+	clotheId: number
 }

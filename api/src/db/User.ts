@@ -62,7 +62,7 @@ export class User {
 
     @Column({
         nullable: false,
-        default: [],
+        default: 0,
         type: "simple-array"
     })
     // An array of the clothing ids this user has matched with
