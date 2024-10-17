@@ -142,7 +142,7 @@ Retrieves new options to swipe on based on the user's settings i.e. tags and loc
         "style": null,
         "type": "coat",
         "images": [
-           thisisanexampleofanimage 
+           "thisisanexampleofanimage" 
         ],
         "user": {
             "userId": "fqxKpnY1ssbMplM62p1e4LsTOF22",
@@ -167,7 +167,7 @@ Retrieves new options to swipe on based on the user's settings i.e. tags and loc
         "style": null,
         "type": "coat",
         "images": [
-           thisisanexampleofanimage 
+           "thisisanexampleofanimage" 
         ],
         "user": {
             "userId": "fqxKpnY1ssbMplM62p1e4LsTOF22",
@@ -192,7 +192,7 @@ Retrieves new options to swipe on based on the user's settings i.e. tags and loc
         "style": null,
         "type": "jumper",
         "images": [
-           thisisanexampleofanimage  
+           "thisisanexampleofanimage"  
         ],
         "user": {
             "userId": "fqxKpnY1ssbMplM62p1e4LsTOF22",
@@ -215,7 +215,7 @@ Retrieves new options to swipe on based on the user's settings i.e. tags and loc
         "style": null,
         "type": "pants",
         "images": [
-           thisisanexampleofanimage  
+           "thisisanexampleofanimage"  
         ],
         "user": {
             "userId": "fqxKpnY1ssbMplM62p1e4LsTOF22",
@@ -238,7 +238,7 @@ Retrieves new options to swipe on based on the user's settings i.e. tags and loc
         "style": null,
         "type": "pants",
         "images": [
-           thisisanexampleofanimage 
+           "thisisanexampleofanimage" 
         ],
         "user": {
             "userId": "fqxKpnY1ssbMplM62p1e4LsTOF22",
@@ -272,7 +272,7 @@ Retrieves new options to swipe on based on the user's settings i.e. tags and loc
         "style": null,
         "type": "shirt",
         "images": [
-           thisisanexampleofanimage 
+           "thisisanexampleofanimage" 
         ],
         "user": {
             "userId": "CvERSFKX9hNfsnM9udUsv7iBKRD3",
@@ -565,7 +565,7 @@ Edits a previous items tags, size, etc. Body params are all optional but there s
         "style": null,
         "type": "coat",
         "images": [
-           thisisanexampleofanimage 
+           "thisisanexampleofanimage" 
         ]
     }
 ]
